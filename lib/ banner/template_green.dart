@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:hktn/buyer/chk.dart';
 
 
 import '../buyer/veg_details.dart';
@@ -25,7 +26,8 @@ class _TemplateGreenState extends State<TemplateGreen> {
       onTap: () {
         print(widget.data);
         print("bla");
-        Get.to(VegDetails(data: widget.data,index: widget.index,));
+        //Get.to(chk());
+         Get.to(VegDetails(data: widget.data,index: widget.index,));
       },
       child: Container(
         width: 160,

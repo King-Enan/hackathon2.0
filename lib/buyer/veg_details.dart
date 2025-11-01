@@ -22,20 +22,20 @@ class _VegDetailsState extends State<VegDetails> {
 
   final box=GetStorage();
 
-  Map<String,dynamic> to_transection=
-  {
-    'id' : '',
-    "name": "",
-    "category": "",
-    "company": "",
-    "risk": "",
-    "pricePerShare": 0,
-    "roi": 0,
-    "investing" : 0,
-    "total" : 0,
-    "Date" : "Jan 01,2025",
-    "GateWay" : "",
-  };
+  // Map<String,dynamic> to_transection=
+  // {
+  //   'id' : '',
+  //   "name": "",
+  //   "category": "",
+  //   "company": "",
+  //   "risk": "",
+  //   "pricePerShare": 0,
+  //   "roi": 0,
+  //   "investing" : 0,
+  //   "total" : 0,
+  //   "Date" : "Jan 01,2025",
+  //   "GateWay" : "",
+  // };
 
   @override
   // void initState() {
@@ -52,19 +52,19 @@ class _VegDetailsState extends State<VegDetails> {
   // }
   // final favinvestment=FavInvestment();
   // final reviews=Reviews();
-  int selectTitle = 0;
-  int quantity = 0;
-  late int available;
-  bool agree =false;
-  bool left_review=true;
-  @override
+  // int selectTitle = 0;
+  // int quantity = 0;
+  // late int available;
+  // bool agree =false;
+  // bool left_review=true;
+  // @override
   Widget build(BuildContext context) {
-    available=widget.data['project_total_share_numbers']-widget.data['project_share_sold'];
-    List<Widget> titels = [
-      Text("Description", style: selectTitle == 0 ? AppWidget.QuickSandWhiteSizeBold(12) : AppWidget.QuickSandGreenSizeBold(12)),
-      Text("Details", style: selectTitle == 1 ? AppWidget.QuickSandWhiteSizeBold(12) : AppWidget.QuickSandGreenSizeBold(12)),
-      Text("Review", style: selectTitle == 2 ? AppWidget.QuickSandWhiteSizeBold(12) : AppWidget.QuickSandGreenSizeBold(12)),
-    ];
+    //available=widget.data['project_total_share_numbers']-widget.data['project_share_sold'];
+    // List<Widget> titels = [
+    //   Text("Description", style: selectTitle == 0 ? AppWidget.QuickSandWhiteSizeBold(12) : AppWidget.QuickSandGreenSizeBold(12)),
+    //   Text("Details", style: selectTitle == 1 ? AppWidget.QuickSandWhiteSizeBold(12) : AppWidget.QuickSandGreenSizeBold(12)),
+    //   Text("Review", style: selectTitle == 2 ? AppWidget.QuickSandWhiteSizeBold(12) : AppWidget.QuickSandGreenSizeBold(12)),
+    // ];
 
     return Scaffold(
       backgroundColor: AppWidget().whiteColor,
