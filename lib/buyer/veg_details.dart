@@ -55,7 +55,7 @@ class _VegDetailsState extends State<VegDetails> {
   int selectTitle = 0;
   int quantity = 0;
   late int available;
-  bool agree=false;
+  bool agree =false;
   bool left_review=true;
   @override
   Widget build(BuildContext context) {
