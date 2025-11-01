@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hktn/buyer/bottum_nav.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hktn/firebase_options.dart';
 import 'package:hktn/buyer/buyer_homepage.dart';
 
 Future<void> main() async {
+  await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
@@ -13,15 +15,15 @@ Future<void> main() async {
   );
 
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  final box = GetStorage();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    //bool isFirstTime = box.read('onboard_seen') ?? false;
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(

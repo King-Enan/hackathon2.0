@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:hktn/buyer/buyer_visit_farmer.dart';
 
 import '../widget/support_widget.dart';
 
@@ -23,6 +24,7 @@ class _TemplateUserState extends State<TemplateUser> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        Get.to(BuyerVisitFarmer());
         // Get.to(NewsDetails(data: widget.data,index: widget.index,));
       },
       child: Container(
