@@ -48,7 +48,7 @@ class _AllVegState extends State<AllVeg> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: List.generate(vegs.categories.length, (index) {
-          final data = vegs.categories[index];
+          final data =vegs.categories[index];
           return GestureDetector(
               onTap: () {
                 setState(() {
