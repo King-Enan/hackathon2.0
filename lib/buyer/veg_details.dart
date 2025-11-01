@@ -74,8 +74,8 @@ class _VegDetailsState extends State<VegDetails> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             dummyImageWidget(),
-            // AppWidget().heightSpace,
-            // BasicDetails(),
+            AppWidget().heightSpace,
+            BasicDetails(),
             // AppWidget().heightSpace,
             // SegmentedControl(titels),
             // AppWidget().heightSpace,
@@ -225,8 +225,8 @@ class _VegDetailsState extends State<VegDetails> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+             mainAxisAlignment: MainAxisAlignment.start,
+            //crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
                 onTap: () {
@@ -306,7 +306,7 @@ class _VegDetailsState extends State<VegDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.data['project_name'],
+            widget.data['name'],
             style: AppWidget.QuickSandBlackSizeBold(28),
             overflow: TextOverflow.values[1],
           ),
@@ -320,7 +320,7 @@ class _VegDetailsState extends State<VegDetails> {
               ),
               AppWidget().widthSpace,
               Text(
-                widget.data['user_id'].toString(),
+                widget.data['seller'].toString(),
                 style: AppWidget.QuickSandGreenSizeBold(20),
               ),
             ],
