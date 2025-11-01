@@ -6,6 +6,7 @@ import 'package:lottie/lottie.dart';
 
 import '../ banner/slider.dart';
 
+import '../ banner/template_green.dart';
 import '../db/db.dart';
 import '../text_field/txt_field1.dart';
 import '../widget/support_widget.dart';
@@ -20,9 +21,9 @@ class BuyerHomepage extends StatefulWidget {
 
 var srchController =TextEditingController();
 
-final investmentlist=InvestmentList();
-final newslist=NewsList();
-final latestlist=InvestmentList2();
+final vegetableslist=VegetablesList();
+final trending = Trending();
+final agro = Agro();
 class _BuyerHomepageState extends State<BuyerHomepage> {
   @override
   Widget build(BuildContext context) {
@@ -252,11 +253,10 @@ class _BuyerHomepageState extends State<BuyerHomepage> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: List.generate(
-                latestlist.items.length,
+                agro.items.length,
                     (index) {
-                  final recommendedItemData = latestlist.items[index];
-                  // return TemplateGreen(data: recommendedItemData,index: index,);
-                  return BuyerHomepage();
+                  final recommendedItemData = agro.items[index];
+                  return TemplateGreen(data: recommendedItemData,index: index,);
                 },
               ),
             ),
