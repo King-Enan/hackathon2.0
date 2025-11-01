@@ -2,10 +2,14 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+
+import 'package:hktn/db/user_info.dart';
 import 'package:lottie/lottie.dart';
 
 import '../ banner/slider.dart';
 
+import '../ banner/template_green.dart';
+import '../ banner/template_user.dart';
 import '../db/db.dart';
 import '../text_field/txt_field1.dart';
 import '../widget/support_widget.dart';
@@ -20,9 +24,9 @@ class BuyerHomepage extends StatefulWidget {
 
 var srchController =TextEditingController();
 
-final investmentlist=InvestmentList();
-final newslist=NewsList();
-final latestlist=InvestmentList2();
+final productlist = ProductList();
+final userinfo = UserInfo();
+
 class _BuyerHomepageState extends State<BuyerHomepage> {
   @override
   Widget build(BuildContext context) {
@@ -40,11 +44,11 @@ class _BuyerHomepageState extends State<BuyerHomepage> {
               AppWidget().height5Space,
               Tranding(),
               AppWidget().heightSpace,
-              // LatestInvestment(),
-              // AppWidget().heightSpace,
-              // Recommended(),
-              // AppWidget().heightSpace,
-              // NewsForYou(),
+              LatestInvestment(),
+              AppWidget().heightSpace,
+              Recommended(),
+              AppWidget().heightSpace,
+              NewsForYou(),
 
 
             ],
@@ -252,11 +256,11 @@ class _BuyerHomepageState extends State<BuyerHomepage> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: List.generate(
-                latestlist.items.length,
+                productlist.items.length,
                     (index) {
-                  final recommendedItemData = latestlist.items[index];
-                  // return TemplateGreen(data: recommendedItemData,index: index,);
-                  return BuyerHomepage();
+                  final recommendedItemData = productlist.items[index];
+                   return TemplateGreen(data: recommendedItemData,index: index,);
+                  //return BuyerHomepage();
                 },
               ),
             ),
@@ -266,63 +270,62 @@ class _BuyerHomepageState extends State<BuyerHomepage> {
     );
   }
 
-// Widget Recommended() {
-//   return Padding(
-//     padding: const EdgeInsets.only(top: 4, left: 20.0, right: 20, bottom: 8),
-//     child: Column(
-//       children: [
-//         headline("Recommended For You", true, () {
-//           Get.offAll(()=>BottomNav(index : 1));
-//         }),
-//         AppWidget().height5Space,
-//         SingleChildScrollView(
-//           physics: const BouncingScrollPhysics(),
-//           padding: EdgeInsets.only(top: AppWidget().fixPadding),
-//           scrollDirection: Axis.horizontal,
-//           child: Row(
-//             children: List.generate(
-//               investmentlist.investmentList.length,
-//                   (index) {
-//                 final recommendedItemData = investmentlist
-//                     .investmentList[index];
-//
-//                 return TemplateGreen(data: recommendedItemData,index: index,);
-//               },
-//             ),
-//           ),
-//         )
-//       ],
-//     ),
-//   );
-// }
+Widget Recommended() {
+  return Padding(
+    padding: const EdgeInsets.only(top: 4, left: 20.0, right: 20, bottom: 8),
+    child: Column(
+      children: [
+        headline("Nearby You", true, () {
+          Get.offAll(()=>BottomNav(index : 1));
+        }),
+        AppWidget().height5Space,
+        SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.only(top: AppWidget().fixPadding),
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(
+              productlist.items.length,
+                  (index) {
+                final recommendedItemData = productlist.items[index];
 
-// Widget NewsForYou() {
-//   return Padding(
-//     padding: const EdgeInsets.only(top: 4, left: 20.0, right: 20, bottom: 8),
-//     child: Column(
-//       children: [
-//         headline("Related News", true, () {
-//           Get.offAll(()=>BottomNav(index : 1));
-//         }),
-//         AppWidget().height5Space,
-//         SingleChildScrollView(
-//           physics: const BouncingScrollPhysics(),
-//           padding: EdgeInsets.only(top: AppWidget().fixPadding),
-//           scrollDirection: Axis.horizontal,
-//           child: Row(
-//             children: List.generate(
-//               investmentlist.investmentList.length,
-//                   (index) {
-//                 final news = newslist.investedRelatedNews[index];
-//                 return TemplateGreenNews(data: news,index: index,);
-//               },
-//             ),
-//           ),
-//         )
-//       ],
-//     ),
-//   );
-// }
+                return TemplateGreen(data: recommendedItemData,index: index,);
+              },
+            ),
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+Widget NewsForYou() {
+  return Padding(
+    padding: const EdgeInsets.only(top: 4, left: 20.0, right: 20, bottom: 8),
+    child: Column(
+      children: [
+        headline("Reliable Farmer", true, () {
+          Get.offAll(()=>BottomNav(index : 1));
+        }),
+        AppWidget().height5Space,
+        SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.only(top: AppWidget().fixPadding),
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(
+              userinfo.item.length,
+                  (index) {
+                final info = userinfo.item[index];
+                return TemplateUser(data: info,index: index,);
+              },
+            ),
+          ),
+        )
+      ],
+    ),
+  );
+}
 
 // Widget headerTitle(BuildContext context) {
 //   return Row(
