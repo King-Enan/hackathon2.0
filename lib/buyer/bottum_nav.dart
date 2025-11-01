@@ -2,10 +2,12 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hktn/buyer/all_veg.dart';
 import 'package:hktn/buyer/buyer_dashboard.dart';
 import 'package:hktn/buyer/buyer_homepage.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ep.dart';
+import 'package:iconify_flutter/icons/gg.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 
 import '../widget/support_widget.dart';
@@ -30,6 +32,7 @@ class _BottomNavState extends State<BottomNav> {
   late List<Widget> pages;
   late BuyerHomepage buyerHomePage;
   late BuyerDashboard buyerDashboard;
+  late AllVeg allVeg;
   // late InvestmentPost investmentPost;
   // late News news;
   // late Others others;
@@ -44,10 +47,11 @@ class _BottomNavState extends State<BottomNav> {
 
     buyerHomePage = BuyerHomepage();
     buyerDashboard = BuyerDashboard();
+    allVeg = AllVeg();
     // investmentPost = InvestmentPost();
     // news = News();
     // others = Others();
-    pages = [buyerHomePage,buyerDashboard];
+    pages = [buyerHomePage,allVeg,buyerDashboard];
     super.initState();
   }
   @override
@@ -68,11 +72,11 @@ class _BottomNavState extends State<BottomNav> {
         },
         items:  [
           Iconify(Ep.home_filled,color: AppWidget().whiteColor,),
-          Iconify(Mdi.list_box_outline,color: AppWidget().whiteColor,),
+          Iconify(Gg.feed,color: AppWidget().whiteColor,),
           //Icon(CupertinoIcons.news_solid,color: AppWidget().whiteColor,),
           //Icon(Icons.home_outlined, color: Colors.white),
           //Icon(Icons.feed_outlined, color: Colors.white),
-          //Icon(Icons.newspaper_outlined, color: Colors.white),
+          Icon(Icons.newspaper_outlined, color: Colors.white),
           //Icon(Icons.person_outline, color: Colors.white),
         ],
       ),

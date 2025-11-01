@@ -52,11 +52,12 @@ class _VegDetailsState extends State<VegDetails> {
   // }
   // final favinvestment=FavInvestment();
   // final reviews=Reviews();
-  // int selectTitle = 0;
-  // int quantity = 0;
+   int selectTitle = 0;
+  int quantity = 0;
   // late int available;
-  // bool agree =false;
-  // bool left_review=true;
+  int available = 0;
+  bool agree =false;
+  bool left_review=true;
   // @override
   Widget build(BuildContext context) {
     //available=widget.data['project_total_share_numbers']-widget.data['project_share_sold'];
@@ -76,12 +77,12 @@ class _VegDetailsState extends State<VegDetails> {
             dummyImageWidget(),
             AppWidget().heightSpace,
             BasicDetails(),
-            // AppWidget().heightSpace,
+            AppWidget().heightSpace,
             // SegmentedControl(titels),
             // AppWidget().heightSpace,
             // SegmentBoxs(),
             // AppWidget().heightSpace,
-            // PayementBox(),
+            PayementBox(),
           ],
         ),
       ),
@@ -335,7 +336,7 @@ class _VegDetailsState extends State<VegDetails> {
               ),
               AppWidget().widthBox(20),
               Text(
-                "Shadar Ghat , Chittagong",
+                widget.data['location'],
                 style: AppWidget.QuickSandGreySizeBold(14),
               ),
             ],
@@ -414,232 +415,233 @@ class _VegDetailsState extends State<VegDetails> {
   //   );
   // }
   //
-  // Widget PayementBox(){
-  //   void increaseQuantity() {
-  //     setState(() {
-  //       quantity++;
-  //     });
-  //     print(available);
-  //   }
-  //
-  //   void decreaseQuantity() {
-  //     if (quantity > 0) {
-  //       setState(() {
-  //         quantity--;
-  //       });
-  //     }
-  //     print(available);
-  //   }
-  //
-  //   return Container(
-  //     margin: const EdgeInsets.only(top: 8, left: 20.0, right: 20, bottom: 0),
-  //     //padding: EdgeInsets.all(12),
-  //     child: Column(
-  //       children: [
-  //         //available units
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Text("Available Units",style: AppWidget.QuickSandBlackSizeBold(22),),
-  //             Text(available.toString(),style: AppWidget.QuickSandGreenSizeBold(26),),
-  //           ],
-  //         ),
-  //         AppWidget().heightSpace,
-  //         AppWidget().heightSpace,
-  //         //total
-  //         Container(
-  //           padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-  //           decoration: BoxDecoration(
-  //             borderRadius: BorderRadius.circular(4),
-  //             color: AppWidget().primaryColor.withOpacity(.3),
-  //           ),
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //             children: [
-  //               Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   AppWidget().width5Space,
-  //                   Text("Total Investing",style: AppWidget.KumbhSansBlack87SizeBold(16),),
-  //                   Text((quantity*widget.data['project_share_unit_price']).toStringAsFixed(2)+" Tk",style: AppWidget.KumbhSansGreenSizeBold(16),),
-  //                 ],
-  //               ),
-  //               Container(
-  //                 padding: EdgeInsets.all(8),
-  //                 height: 50, // Adjust height as needed
-  //                 child: VerticalDivider(
-  //                   color: Colors.grey, // Divider color
-  //                   thickness: 1, // Divider thickness
-  //                   width: 20, // Space around the divider
-  //                 ),
-  //               ),
-  //               Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.end,
-  //                 children: [
-  //                   AppWidget().width5Space,
-  //                   Text("Total Earning",style: AppWidget.KumbhSansBlack87SizeBold(16),),
-  //                   Text(((quantity*widget.data['project_share_unit_price'])+(quantity*widget.data['project_share_unit_price'])*(widget.data['project_roi']/100)).toStringAsFixed(2)+" Tk",style: AppWidget.KumbhSansGreenSizeBold(16),),
-  //                 ],
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //         AppWidget().heightSpace,
-  //         AppWidget().heightSpace,
-  //         // (+,_)
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             //AppWidget().heightBox(15),
-  //             Text("You are Investing",style: AppWidget.QuickSandBlackSizeBold(18)),
-  //             Container(
-  //               width: 150,
-  //               height: 35,
-  //               decoration: BoxDecoration(
-  //                 borderRadius: BorderRadius.circular(8), // Outer border radius
-  //                 border: Border.all(
-  //                   color: AppWidget().blackColor.withOpacity(.8),
-  //                   width: 0.5,
-  //                 ),
-  //               ),
-  //               child: Row(
-  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                 children: [
-  //                   Container(
-  //                     height: 40, // Match parent height
-  //                     width: 40, // Square button
-  //                     decoration: BoxDecoration(
-  //                       color: AppWidget().primaryColor.withOpacity(.2),
-  //                       borderRadius: BorderRadius.only(
-  //                         topLeft: Radius.circular(8), // Match outer radius
-  //                         bottomLeft: Radius.circular(8),
-  //                       ),
-  //                     ),
-  //                     child: IconButton(
-  //                       icon: Icon(Icons.remove, size: 16),
-  //                       onPressed: decreaseQuantity,
-  //                     ),
-  //                   ),
-  //                   Text(
-  //                     "$quantity",
-  //                     style: AppWidget.QuickSandBlackSize(20),
-  //                   ),
-  //                   Container(
-  //                     height: 40,
-  //                     width: 40,
-  //                     decoration: BoxDecoration(
-  //                       color: AppWidget().primaryColor.withOpacity(.2),
-  //                       borderRadius: BorderRadius.only(
-  //                         topRight: Radius.circular(8), // Match outer radius
-  //                         bottomRight: Radius.circular(8),
-  //                       ),
-  //                     ),
-  //                     child: IconButton(
-  //                       icon: Icon(Icons.add, size: 16),
-  //                       onPressed: increaseQuantity,
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             )
-  //
-  //           ],
-  //         ),
-  //         AppWidget().heightSpace,
-  //         AppWidget().heightSpace,
-  //         Terms_Agreement(),
-  //         AppWidget().heightSpace,
-  //         //invest now
-  //         GestureDetector(
-  //           onTap: (){
-  //             bool check = box.read('is_logged_in') ?? false;
-  //             if(check) {
-  //               print("check log");
-  //               to_transection["investing"] = quantity;
-  //               //double totalPrice = quantity * widget.data['pricePerShare'];
-  //               to_transection["total"] = (quantity * widget.data['project_share_unit_price']);
-  //               print(to_transection["investing"]);
-  //               print(to_transection["total"]);
-  //               agree ? Get.to(TransectionPage(data: to_transection,)) : null;
-  //             }
-  //             else
-  //             {
-  //               Get.to(SignInScreen());
-  //             }
-  //           },
-  //           child: Container(
-  //             width: AppWidget().screenWidth,
-  //             padding: EdgeInsets.symmetric(vertical: 8),
-  //             decoration: BoxDecoration(
-  //               color: agree?AppWidget().primaryColor:AppWidget().primaryColor.withOpacity(.5),
-  //               borderRadius: BorderRadius.circular(8),
-  //             ),
-  //             alignment: Alignment.center,
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               children: [
-  //                 Text("Invest Now",style: AppWidget.QuickSandWhiteSizeBold(20),),
-  //                 AppWidget().widthSpace,
-  //                 Icon(CupertinoIcons.arrow_right,weight: 22,color: AppWidget().whiteColor,),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-  //
-  // Widget Terms_Agreement(){
-  //   return Theme(
-  //     data: Theme.of(context).copyWith(dividerColor: Colors.transparent), // Removes default border of expand tile
-  //     child: ExpansionTile(
-  //       maintainState: true,
-  //       tilePadding: EdgeInsets.zero,
-  //       leading: Checkbox(
-  //         activeColor: AppWidget().primaryColor,
-  //         value: agree,
-  //         onChanged: (value) {
-  //           setState(() {
-  //             agree = value!;
-  //           });
-  //         },
-  //       ),
-  //       title: Row(
-  //         children: [
-  //           Expanded( // Prevents overflow issue
-  //             child: Row(
-  //               children: [
-  //                 Text("Agree with ", style: AppWidget().medium14Black),
-  //                 Text("Terms & Agreement", style: AppWidget().medium14Primary),
-  //               ],
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //       children: [
-  //         Padding(
-  //           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-  //           child: Text(
-  //             "1. **Investment Risk**: All investments carry risks, including potential loss of principal.\n\n"
-  //                 "2. **No Guaranteed Returns**: Past performance does not indicate future results. Returns may vary.\n\n"
-  //                 "3. **Withdrawal Restrictions**: Some investments may have lock-in periods. Early withdrawal may incur penalties.\n\n"
-  //                 "4. **Regulatory Compliance**: Investors must comply with applicable financial regulations and tax laws.\n\n"
-  //                 "5. **Market Fluctuations**: Investment values may fluctuate due to market conditions, and returns are not fixed.\n\n"
-  //                 "6. **Due Diligence**: It is your responsibility to research and understand investment opportunities before committing funds.\n\n"
-  //                 "7. **Modification of Terms**: The company reserves the right to update investment policies and conditions at any time.",
-  //             style: AppWidget().medium14Black,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-  //
-  // int calculateRemaining(int total_share,int remaining_share)
-  // {
-  //   return total_share-remaining_share;
-  // }
+  Widget PayementBox(){
+    void increaseQuantity() {
+      setState(() {
+        quantity++;
+      });
+      print(available);
+    }
+
+    void decreaseQuantity() {
+      if (quantity > 0) {
+        setState(() {
+          quantity--;
+        });
+      }
+      print(available);
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: 8, left: 20.0, right: 20, bottom: 0),
+      //padding: EdgeInsets.all(12),
+      child: Column(
+        children: [
+          //available units
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Available Units",style: AppWidget.QuickSandBlackSizeBold(22),),
+              Text(available.toString()+" KG",style: AppWidget.QuickSandGreenSizeBold(26),),
+            ],
+          ),
+          AppWidget().heightSpace,
+          AppWidget().heightSpace,
+          //total
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: AppWidget().primaryColor.withOpacity(.3),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppWidget().width5Space,
+                    Text("Total Cost",style: AppWidget.KumbhSansBlack87SizeBold(16),),
+                    Text((quantity*widget.data['price']).toStringAsFixed(2)+" Tk",style: AppWidget.KumbhSansGreenSizeBold(16),),
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  height: 50, // Adjust height as needed
+                  child: VerticalDivider(
+                    color: Colors.grey, // Divider color
+                    thickness: 1, // Divider thickness
+                    width: 20, // Space around the divider
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    AppWidget().width5Space,
+                    Text("Total Weight",style: AppWidget.KumbhSansBlack87SizeBold(16),),
+                    Text(quantity.toStringAsFixed(0)+"KG",style: AppWidget.KumbhSansGreenSizeBold(16),),
+
+                  ],
+                ),
+              ],
+            ),
+          ),
+          AppWidget().heightSpace,
+          AppWidget().heightSpace,
+          // (+,_)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              //AppWidget().heightBox(15),
+              Text("You are Ordering",style: AppWidget.QuickSandBlackSizeBold(18)),
+              Container(
+                width: 150,
+                height: 35,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8), // Outer border radius
+                  border: Border.all(
+                    color: AppWidget().blackColor.withOpacity(.8),
+                    width: 0.5,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: 40, // Match parent height
+                      width: 40, // Square button
+                      decoration: BoxDecoration(
+                        color: AppWidget().primaryColor.withOpacity(.2),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8), // Match outer radius
+                          bottomLeft: Radius.circular(8),
+                        ),
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.remove, size: 16),
+                        onPressed: decreaseQuantity,
+                      ),
+                    ),
+                    Text(
+                      "$quantity",
+                      style: AppWidget.QuickSandBlackSize(20),
+                    ),
+                    Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        color: AppWidget().primaryColor.withOpacity(.2),
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(8), // Match outer radius
+                          bottomRight: Radius.circular(8),
+                        ),
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.add, size: 16),
+                        onPressed: increaseQuantity,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+
+            ],
+          ),
+          AppWidget().heightSpace,
+          AppWidget().heightSpace,
+          Terms_Agreement(),
+          AppWidget().heightSpace,
+          //invest now
+          GestureDetector(
+            onTap: (){
+              bool check = box.read('is_logged_in') ?? false;
+              // if(check) {
+              //   print("check log");
+              //   to_transection["investing"] = quantity;
+              //   //double totalPrice = quantity * widget.data['pricePerShare'];
+              //   to_transection["total"] = (quantity * widget.data['project_share_unit_price']);
+              //   print(to_transection["investing"]);
+              //   print(to_transection["total"]);
+              //   agree ? Get.to(TransectionPage(data: to_transection,)) : null;
+              // }
+              // else
+              // {
+              //   Get.to(SignInScreen());
+              // }
+            },
+            child: Container(
+              width: AppWidget().screenWidth,
+              padding: EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: agree?AppWidget().primaryColor:AppWidget().primaryColor.withOpacity(.5),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Invest Now",style: AppWidget.QuickSandWhiteSizeBold(20),),
+                  AppWidget().widthSpace,
+                  Icon(CupertinoIcons.arrow_right,weight: 22,color: AppWidget().whiteColor,),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget Terms_Agreement(){
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent), // Removes default border of expand tile
+      child: ExpansionTile(
+        maintainState: true,
+        tilePadding: EdgeInsets.zero,
+        leading: Checkbox(
+          activeColor: AppWidget().primaryColor,
+          value: agree,
+          onChanged: (value) {
+            setState(() {
+              agree = value!;
+            });
+          },
+        ),
+        title: Row(
+          children: [
+            Expanded( // Prevents overflow issue
+              child: Row(
+                children: [
+                  Text("Agree with ", style: AppWidget().medium14Black),
+                  Text("Terms & Agreement", style: AppWidget().medium14Primary),
+                ],
+              ),
+            ),
+          ],
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Text(
+              "1. **Investment Risk**: All investments carry risks, including potential loss of principal.\n\n"
+                  "2. **No Guaranteed Returns**: Past performance does not indicate future results. Returns may vary.\n\n"
+                  "3. **Withdrawal Restrictions**: Some investments may have lock-in periods. Early withdrawal may incur penalties.\n\n"
+                  "4. **Regulatory Compliance**: Investors must comply with applicable financial regulations and tax laws.\n\n"
+                  "5. **Market Fluctuations**: Investment values may fluctuate due to market conditions, and returns are not fixed.\n\n"
+                  "6. **Due Diligence**: It is your responsibility to research and understand investment opportunities before committing funds.\n\n"
+                  "7. **Modification of Terms**: The company reserves the right to update investment policies and conditions at any time.",
+              style: AppWidget().medium14Black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  int calculateRemaining(int total_share,int remaining_share)
+  {
+    return total_share-remaining_share;
+  }
   //
   //
   // Widget Details(){
