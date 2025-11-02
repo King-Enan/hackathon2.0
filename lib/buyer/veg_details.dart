@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hktn/buyer/my_cart.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ant_design.dart';
 
@@ -22,34 +23,34 @@ class _VegDetailsState extends State<VegDetails> {
 
   final box=GetStorage();
 
-  // Map<String,dynamic> to_transection=
-  // {
-  //   'id' : '',
-  //   "name": "",
-  //   "category": "",
-  //   "company": "",
-  //   "risk": "",
-  //   "pricePerShare": 0,
-  //   "roi": 0,
-  //   "investing" : 0,
-  //   "total" : 0,
-  //   "Date" : "Jan 01,2025",
-  //   "GateWay" : "",
-  // };
+  Map<String,dynamic> to_transection=
+  {
+    'id' : '',
+    "name": "",
+    "category": "",
+    "seller": "",
+    // "risk": "",
+    "price": 0,
+    // "roi": 0,
+    "ordering" : 0,
+    "total" : 0,
+    "Date" : "Jan 01,2025",
+    "GateWay" : "",
+  };
 
   @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   // to_transection['id']=widget.data['id'];
-  //   // to_transection['name']=widget.data['name'];
-  //   // to_transection['company']=widget.data['company'];
-  //   // to_transection['category']=widget.data['category'];
-  //   // to_transection['risk']=widget.data['risk'];
-  //   // to_transection['pricePerShare']=widget.data['pricePerShare'];
-  //   // to_transection['roi']=widget.data['roi'];
-  //
-  // }
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    to_transection['id']=widget.data['id'];
+    to_transection['name']=widget.data['name'];
+    to_transection['seller']=widget.data['seller'];
+    to_transection['category']=widget.data['category'];
+    //to_transection['risk']=widget.data['risk'];
+    to_transection['price']=widget.data['pricePerShare'];
+    //to_transection['roi']=widget.data['roi'];
+
+  }
   // final favinvestment=FavInvestment();
   // final reviews=Reviews();
    int selectTitle = 0;
@@ -253,19 +254,24 @@ class _VegDetailsState extends State<VegDetails> {
                     size: 25.0,
                   ),
                   AppWidget().widthBox(AppWidget().fixPadding * 0.3),
-                  // Text(
-                  //   widget.data['risk']?.toString() ?? '0.0',
-                  //   style: GoogleFonts.quicksand(
-                  //     color: widget.data['project_risk_types'] == "Low"
-                  //         ? AppWidget().primaryColor
-                  //         : widget.data['risk'] == "Medium"
-                  //         ? AppWidget().yellowColor
-                  //         : AppWidget().redColor,
-                  //     fontSize: 18,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  //   overflow: TextOverflow.ellipsis,
-                  // ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(.8),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        widget.data['category'],
+                        style: GoogleFonts.quicksand(
+                          color: AppWidget().primaryColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Row(
@@ -554,20 +560,14 @@ class _VegDetailsState extends State<VegDetails> {
           //invest now
           GestureDetector(
             onTap: (){
-              bool check = box.read('is_logged_in') ?? false;
-              // if(check) {
-              //   print("check log");
-              //   to_transection["investing"] = quantity;
-              //   //double totalPrice = quantity * widget.data['pricePerShare'];
-              //   to_transection["total"] = (quantity * widget.data['project_share_unit_price']);
-              //   print(to_transection["investing"]);
-              //   print(to_transection["total"]);
-              //   agree ? Get.to(TransectionPage(data: to_transection,)) : null;
-              // }
-              // else
-              // {
-              //   Get.to(SignInScreen());
-              // }
+
+                to_transection["quantity"] = quantity;
+                //double totalPrice = quantity * widget.data['pricePerShare'];
+                to_transection["total"] = (quantity * widget.data['price']);
+                print(to_transection["ordering"]);
+                print(to_transection["total"]);
+                agree ? Get.to(MyCart(to_transection: to_transection)) : null;
+
             },
             child: Container(
               width: AppWidget().screenWidth,
@@ -580,7 +580,7 @@ class _VegDetailsState extends State<VegDetails> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Invest Now",style: AppWidget.QuickSandWhiteSizeBold(20),),
+                  Text("Order Now",style: AppWidget.QuickSandWhiteSizeBold(20),),
                   AppWidget().widthSpace,
                   Icon(CupertinoIcons.arrow_right,weight: 22,color: AppWidget().whiteColor,),
                 ],
