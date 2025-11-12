@@ -3,13 +3,36 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hktn/buyer/order_details.dart';
+import 'package:hktn/local_db/user/local_user.dart';
+import 'package:hktn/sign_in.dart';
+
+import '../firebase_services/firebase_logout.dart';
+import '../signup/user_modal.dart';
 
 class BuyerProfile extends StatefulWidget {
   @override
+
   _BuyerProfileState createState() => _BuyerProfileState();
 }
 
+  //final userData = getLocalUser() ;
+  UserModel? userData;
 class _BuyerProfileState extends State<BuyerProfile> {
+
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  void _loadUser() {
+    final data = box.read('user');
+    if (data != null) {
+      setState(() {
+        userData = UserModel.fromMap(Map<String, dynamic>.from(data));
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +113,7 @@ class _BuyerProfileState extends State<BuyerProfile> {
 
             // Name and subtitle
             Text(
-              'Shahed Alam',
+              userData!.firstName,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -132,20 +155,13 @@ class _BuyerProfileState extends State<BuyerProfile> {
                       Icon(Icons.email, color: Colors.green, size: 18),
                       SizedBox(width: 6),
                       Text(
-                        '0 2178 8',
+                       userData!.email,
                         style: TextStyle(color: Colors.black87),
                       ),
                     ],
                   ),
 
-                  // Version text
-                  Text(
-                    'ragaa.0.0.05',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
-                  ),
+
                 ],
               ),
             ),
@@ -224,6 +240,8 @@ class _BuyerProfileState extends State<BuyerProfile> {
                 text: "Log Out",
                 onTap: () {
                   // Handle Settings tap
+                  _onLogoutPressed(context);
+
                 },
               ),
             ),
@@ -309,4 +327,25 @@ class _BuyerProfileState extends State<BuyerProfile> {
       ),
     );
   }
+
+  void _onLogoutPressed(BuildContext context) async {
+    try {
+      await FirebaseLogoutService.logoutUser();
+
+      Get.to(SignIN());
+      print("✅✅✅");
+
+      final data = getLocalUser();
+      print(data!.firstName);
+      print(data!.email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Logged out successfully! 👋')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Logout failed: $e')),
+      );
+    }
+  }
+
 }

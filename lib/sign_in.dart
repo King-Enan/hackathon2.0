@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hktn/buyer/bottum_nav.dart';
-import 'package:hktn/sign_up.dart';
+import 'package:hktn/local_db/user/local_user.dart';
+import 'package:hktn/signup/sign_up.dart';
+import 'package:hktn/widget/support_widget.dart';
 import 'firebase_services/firebase_signin.dart';
 
 class SignIN extends StatefulWidget {
@@ -34,6 +36,11 @@ class _SignINState extends State<SignIN> {
             width: 320,
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/log_in/log_in.jpg'),
+                  opacity: .5,
+                  fit: BoxFit.fitHeight
+              ),
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [BoxShadow(
@@ -47,9 +54,14 @@ class _SignINState extends State<SignIN> {
               children: [
                 // Logo and Title
                 CircleAvatar(
-                  radius: 35,
+                  radius: 40,
                   backgroundColor: Colors.green.shade200,
-                  child: Icon(Icons.eco, size: 45, color: Colors.green.shade800),
+                  child: Image.asset(
+                    'assets/logo/logo.png',
+                    width: 130,
+                    height: 130,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 SizedBox(height: 12),
                 Text(
@@ -72,7 +84,11 @@ class _SignINState extends State<SignIN> {
                   decoration: InputDecoration(
                     hintText: 'Enter your email',
                     prefixIcon: Icon(Icons.email, color: Colors.green),
-                    border: OutlineInputBorder(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: AppWidget().whiteColor,
+                        width: .5,
+                      ),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     filled: true,
@@ -88,7 +104,11 @@ class _SignINState extends State<SignIN> {
                   decoration: InputDecoration(
                     hintText: 'Enter your password',
                     prefixIcon: Icon(Icons.lock, color: Colors.green),
-                    border: OutlineInputBorder(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: AppWidget().whiteColor,
+                          width: .5
+                      ),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     filled: true,
@@ -112,7 +132,7 @@ class _SignINState extends State<SignIN> {
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green.shade700,
+                      backgroundColor: AppWidget().primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
@@ -126,6 +146,7 @@ class _SignINState extends State<SignIN> {
                       'Sign In',
                       style: TextStyle(
                         fontSize: 18,
+                        color: AppWidget().whiteColor,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -142,7 +163,7 @@ class _SignINState extends State<SignIN> {
                   child: Text(
                     'Forgot Password?',
                     style: TextStyle(
-                      color: Colors.orange.shade700,
+                      color: Colors.blue.shade700,
                       decoration: TextDecoration.underline,
                       fontWeight: FontWeight.w500,
                     ),
@@ -196,11 +217,19 @@ class _SignINState extends State<SignIN> {
     });
 
     try {
-      bool success = await FirebaseAuthService.loginWithEmail(email, password);
-      if (success) {
+      final success = await FirebaseAuthService.loginWithEmail(email, password);
+      if (success!=null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Login successful')),
+
         );
+
+        print("✅✅✅");
+
+        final data = getLocalUser();
+        print(data!.firstName);
+        print(data!.email);
+        
         Get.to(BottomNav());
         // TODO: Navigate to home screen or dashboard
       } else {
