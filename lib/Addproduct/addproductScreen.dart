@@ -59,7 +59,7 @@ class _AddProductPageState extends State<AddProductPage> {
       return;
     }
 
-    await _productService.addProduct(
+    await _productService.addProductFromControllers(
       sellerUid: _sellerUid!,
       productNameController: productNameController,
       descriptionController: descriptionController,

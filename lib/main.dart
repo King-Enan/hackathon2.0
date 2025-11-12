@@ -6,6 +6,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:hktn/firebase_options.dart';
 import 'package:hktn/buyer/buyer_homepage.dart';
 
+import 'Add user/adduserscreen.dart';
+import 'Addproduct/addproductScreen.dart';
+
 Future<void> main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +49,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: BottomNav(),
+      home: AddProductPage()
     );
   }
 }
