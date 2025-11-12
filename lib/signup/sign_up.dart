@@ -1,4 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:hktn/buyer/bottum_nav.dart';
+import 'package:hktn/local_db/user/local_user.dart';
+import 'package:hktn/sign_in.dart';
+import 'package:hktn/signup/user_modal.dart';
+import 'package:hktn/widget/support_widget.dart';
+
+import '../firebase_services/firebase_signup.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -15,6 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
@@ -26,24 +37,66 @@ class _SignUpPageState extends State<SignUpPage> {
     firstNameController.dispose();
     lastNameController.dispose();
     addressController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
   }
 
-  void _onContinuePressed() {
+  void _onContinuePressed() async {
     if (selectedRole == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Please select a role')));
+        const SnackBar(content: Text('Please select a role')),
+      );
       return;
     }
 
     if (_formKey.currentState?.validate() ?? false) {
-      // TODO: Trigger sign-up logic with these fields and role
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Signing up as ${selectedRole == UserRole.farmer ? 'Farmer' : 'Buyer'}')));
+        SnackBar(
+          content: Text(
+            'Signing up as ${selectedRole == UserRole.farmer ? 'Farmer' : 'Buyer'}...',
+          ),
+        ),
+      );
+
+      try {
+        final authService =  AuthService();
+
+        await authService.signUpUser(
+          firstName: firstNameController.text.trim(),
+          lastName: lastNameController.text.trim(),
+          address: addressController.text.trim(),
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+          role: selectedRole == UserRole.farmer ? 'farmer' : 'buyer',
+        );
+
+        // ✅ On success, show success message and maybe navigate
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Signup successful! 🎉')),
+        );
+
+
+        Get.to(SignIN());
+
+        print("✅✅✅");
+
+        final data = getLocalUser();
+        print(data!.firstName);
+        print(data!.email);
+
+        // Example navigation after signup:
+        // Navigator.pushReplacementNamed(context, '/home');
+
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Signup failed: $e')),
+        );
+      }
     }
   }
+
 
   Widget _roleCard(UserRole role, String title, String subtitle, IconData icon) {
     bool isSelected = selectedRole == role;
@@ -116,6 +169,7 @@ class _SignUpPageState extends State<SignUpPage> {
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: AppWidget.QuickSandGreySize(16),
         suffixIcon: isPassword
             ? IconButton(
           icon: Icon(
@@ -127,7 +181,12 @@ class _SignUpPageState extends State<SignUpPage> {
             : null,
         filled: true,
         fillColor: Colors.grey.shade100,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+                color: AppWidget().primaryColor.withOpacity(.5),
+                width: 1.5
+            ),
+            borderRadius: BorderRadius.circular(12)),
       ),
       validator: validator,
     );
@@ -238,6 +297,17 @@ class _SignUpPageState extends State<SignUpPage> {
                         validator: (val) {
                           if (val == null || val.trim().isEmpty)
                             return 'Address is required';
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 16),
+
+                      _buildTextField(
+                        label: 'Email',
+                        controller: emailController,
+                        validator: (val) {
+                          if (val == null || val.trim().isEmpty)
+                            return 'Email must be required';
                           return null;
                         },
                       ),
