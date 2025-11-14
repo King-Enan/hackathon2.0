@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:hktn/buyer/bottum_nav.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:hktn/buyer/buyer_bottum_nav.dart';
+import 'package:hktn/farmer/farmer_bottum_nav.dart';
+import 'package:hktn/farmer/farmer_dashboard.dart';
 import 'package:hktn/local_db/user/local_user.dart';
 import 'package:hktn/signup/sign_up.dart';
 import 'package:hktn/widget/support_widget.dart';
@@ -14,6 +17,7 @@ class SignIN extends StatefulWidget {
 }
 
 class _SignINState extends State<SignIN> {
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
@@ -229,8 +233,11 @@ class _SignINState extends State<SignIN> {
         final data = getLocalUser();
         print(data!.firstName);
         print(data!.email);
-        
-        Get.to(BottomNav());
+        if(data!.role=="buyer"){
+        Get.off(BuyerBottomNav());
+        }
+        else
+        Get.off(FarmerBottumNav());
         // TODO: Navigate to home screen or dashboard
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -5,7 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:hktn/buyer/all_veg.dart';
 import 'package:hktn/buyer/buyer_profile.dart';
 import 'package:hktn/buyer/buyer_homepage.dart';
+import 'package:hktn/farmer/farmer_dashboard.dart';
+import 'package:hktn/farmer/farmer_products.dart';
+import 'package:hktn/farmer/farmer_profile.dart';
+import 'package:hktn/farmer/farmer_upload_product.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/ant_design.dart';
 import 'package:iconify_flutter/icons/ep.dart';
 import 'package:iconify_flutter/icons/gg.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
@@ -14,15 +19,15 @@ import 'package:iconify_flutter/icons/pajamas.dart';
 import '../widget/support_widget.dart';
 
 
-class BottomNav extends StatefulWidget {
+class FarmerBottumNav extends StatefulWidget {
   int? index;
-  BottomNav({super.key,this.index});
+  FarmerBottumNav({super.key,this.index});
 
   @override
-  State<BottomNav> createState() => _BottomNavState();
+  State<FarmerBottumNav> createState() => _FarmerBottumNavState();
 }
 
-class _BottomNavState extends State<BottomNav> {
+class _FarmerBottumNavState extends State<FarmerBottumNav> {
 
 
 
@@ -31,9 +36,10 @@ class _BottomNavState extends State<BottomNav> {
 
 
   late List<Widget> pages;
-  late BuyerHomepage buyerHomePage;
-  late BuyerProfile buyerDashboard;
-  late AllVeg allVeg;
+  late FarmerDashboard farmerDashboard;
+  late FarmerProducts farmerProducts;
+  late FarmerProfile farmerProfile;
+  //late AllVeg allVeg;
   // late InvestmentPost investmentPost;
   // late News news;
   // late Others others;
@@ -46,13 +52,14 @@ class _BottomNavState extends State<BottomNav> {
       _bottomNavKey.currentState?.setPage(currentTabIndex!);
     });
 
-    buyerHomePage = BuyerHomepage();
-    buyerDashboard = BuyerProfile();
-    allVeg = AllVeg();
+    farmerDashboard = FarmerDashboard();
+    farmerProducts = FarmerProducts();
+    farmerProfile = FarmerProfile();
+    // allVeg = AllVeg();
     // investmentPost = InvestmentPost();
     // news = News();
     // others = Others();
-    pages = [buyerHomePage,allVeg,buyerDashboard];
+    pages = [farmerDashboard,farmerProducts,farmerProfile];
     super.initState();
   }
   @override
@@ -72,9 +79,10 @@ class _BottomNavState extends State<BottomNav> {
           });
         },
         items:  [
-          Iconify(Ep.home_filled,color: AppWidget().whiteColor,),
-          Iconify(Gg.feed,color: AppWidget().whiteColor,),
-          //Icon(CupertinoIcons.news_solid,color: AppWidget().whiteColor,),
+          //Iconify(Mdi.view_dashboard_outline,color: AppWidget().whiteColor,),
+          Iconify(Mdi.tablet_dashboard,color: AppWidget().whiteColor,),
+          Iconify(AntDesign.upload_outline,color: AppWidget().whiteColor,size: 32,),
+          //Icon(Icons.cloud_upload,color: AppWidget().whiteColor,size: 32,),
           //Icon(Icons.home_outlined, color: Colors.white),
           //Icon(Icons.feed_outlined, color: Colors.white),
           Iconify(Pajamas.profile,color: AppWidget().whiteColor,size: 32,),

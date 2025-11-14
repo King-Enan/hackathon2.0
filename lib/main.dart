@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hktn/buyer/bottum_nav.dart';
+import 'package:hktn/buyer/buyer_bottum_nav.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hktn/firebase_options.dart';
 import 'package:hktn/buyer/buyer_homepage.dart';
+import 'package:hktn/local_db/user/local_user.dart';
 import 'package:hktn/sign_in.dart';
+import 'package:hktn/splash_screen.dart';
 
 Future<void> main() async {
   await GetStorage.init();
@@ -21,6 +23,7 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   final box = GetStorage();
+  final userData = getLocalUser();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: SignIN(),
+      home: SplashScreen(),
     );
   }
 }

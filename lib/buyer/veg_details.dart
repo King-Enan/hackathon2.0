@@ -42,13 +42,13 @@ class _VegDetailsState extends State<VegDetails> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    to_transection['id']=widget.data['id'];
-    to_transection['name']=widget.data['name'];
-    to_transection['seller']=widget.data['seller'];
-    to_transection['category']=widget.data['category'];
-    //to_transection['risk']=widget.data['risk'];
-    to_transection['price']=widget.data['pricePerShare'];
-    //to_transection['roi']=widget.data['roi'];
+    available = widget.data['stock'];
+    // to_transection['id']=widget.data['id'];
+    // to_transection['name']=widget.data['name'];
+    // to_transection['seller']=widget.data['seller'];
+    // to_transection['category']=widget.data['category'];
+    // to_transection['price']=widget.data['pricePerShare'];
+
 
   }
   // final favinvestment=FavInvestment();
@@ -313,7 +313,7 @@ class _VegDetailsState extends State<VegDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.data['name'],
+            widget.data['productName'],
             style: AppWidget.QuickSandBlackSizeBold(28),
             overflow: TextOverflow.values[1],
           ),
@@ -327,7 +327,7 @@ class _VegDetailsState extends State<VegDetails> {
               ),
               AppWidget().widthSpace,
               Text(
-                widget.data['seller'].toString(),
+                widget.data['sellerUid'].toString(),
                 style: AppWidget.QuickSandGreenSizeBold(20),
               ),
             ],
@@ -342,7 +342,8 @@ class _VegDetailsState extends State<VegDetails> {
               ),
               AppWidget().widthBox(20),
               Text(
-                widget.data['location'],
+                "ase ekta",
+                //widget.data['location'],
                 style: AppWidget.QuickSandGreySizeBold(14),
               ),
             ],
@@ -561,12 +562,12 @@ class _VegDetailsState extends State<VegDetails> {
           GestureDetector(
             onTap: (){
 
-                to_transection["quantity"] = quantity;
-                //double totalPrice = quantity * widget.data['pricePerShare'];
-                to_transection["total"] = (quantity * widget.data['price']);
-                print(to_transection["ordering"]);
-                print(to_transection["total"]);
-                agree ? Get.to(MyCart(to_transection: to_transection)) : null;
+                // to_transection["quantity"] = quantity;
+                // //double totalPrice = quantity * widget.data['pricePerShare'];
+                // to_transection["total"] = (quantity * widget.data['price']);
+                // print(to_transection["ordering"]);
+                // print(to_transection["total"]);
+                // agree ? Get.to(MyCart(to_transection: to_transection)) : null;
 
             },
             child: Container(

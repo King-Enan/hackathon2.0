@@ -10,15 +10,15 @@ import 'package:hktn/widget/support_widget.dart';
 import '../firebase_services/firebase_logout.dart';
 import '../models/user_modal.dart';
 
-class BuyerProfile extends StatefulWidget {
+class FarmerProfile extends StatefulWidget {
   @override
 
-  _BuyerProfileState createState() => _BuyerProfileState();
+  _FarmerProfileState createState() => _FarmerProfileState();
 }
 
-  //final userData = getLocalUser() ;
-  UserModel? userData;
-class _BuyerProfileState extends State<BuyerProfile> {
+//final userData = getLocalUser() ;
+UserModel? userData;
+class _FarmerProfileState extends State<FarmerProfile> {
 
   void initState() {
     super.initState();
@@ -68,8 +68,8 @@ class _BuyerProfileState extends State<BuyerProfile> {
                     },
                   ),
                   Text(
-                    "Profile",
-                    style: AppWidget.QuickSandGreySizeBold(22)
+                      "Profile",
+                      style: AppWidget.QuickSandGreySizeBold(22)
                   ),
                   IconButton(
                     icon: Icon(Icons.edit, color: Colors.green),
@@ -153,7 +153,7 @@ class _BuyerProfileState extends State<BuyerProfile> {
                       Icon(Icons.email, color: Colors.green, size: 18),
                       SizedBox(width: 6),
                       Text(
-                       userData!.email,
+                        userData!.email,
                         style: TextStyle(color: Colors.black87),
                       ),
                     ],

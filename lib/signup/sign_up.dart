@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hktn/buyer/bottum_nav.dart';
+import 'package:hktn/buyer/buyer_bottum_nav.dart';
 import 'package:hktn/local_db/user/local_user.dart';
 import 'package:hktn/sign_in.dart';
-import 'package:hktn/signup/user_modal.dart';
 import 'package:hktn/widget/support_widget.dart';
 
 import '../firebase_services/firebase_signup.dart';
@@ -26,6 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
@@ -38,6 +38,7 @@ class _SignUpPageState extends State<SignUpPage> {
     lastNameController.dispose();
     addressController.dispose();
     emailController.dispose();
+    phoneController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
@@ -68,6 +69,7 @@ class _SignUpPageState extends State<SignUpPage> {
           lastName: lastNameController.text.trim(),
           address: addressController.text.trim(),
           email: emailController.text.trim(),
+          phone : phoneController.text.trim(),
           password: passwordController.text.trim(),
           role: selectedRole == UserRole.farmer ? 'farmer' : 'buyer',
         );
@@ -308,6 +310,17 @@ class _SignUpPageState extends State<SignUpPage> {
                         validator: (val) {
                           if (val == null || val.trim().isEmpty)
                             return 'Email must be required';
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 16),
+
+                      _buildTextField(
+                        label: 'Phone',
+                        controller: phoneController,
+                        validator: (val) {
+                          if (val == null || val.trim().isEmpty)
+                            return 'Phone must be required';
                           return null;
                         },
                       ),

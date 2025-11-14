@@ -6,6 +6,7 @@ class UserModel {
   final String lastName;
   final String address;
   final String email;
+  final String phone;
   final String role; // 'farmer' or 'buyer'
 
   UserModel({
@@ -14,6 +15,7 @@ class UserModel {
     required this.lastName,
     required this.address,
     required this.email,
+    required this.phone,
     required this.role,
   });
 
@@ -26,6 +28,7 @@ class UserModel {
       lastName: data['lastName'] ?? '',
       address: data['address'] ?? '',
       email: data['email'] ?? '',
+      phone: data['phone'] ?? '',
       role: data['role'] ?? '',
     );
   }
@@ -37,6 +40,7 @@ class UserModel {
       lastName: data['lastName'] ?? '',
       address: data['address'] ?? '',
       email: data['email'] ?? '',
+      phone: data['phone'] ?? '',
       role: data['role'] ?? '',
     );
   }
@@ -48,6 +52,7 @@ class UserModel {
       'lastName': lastName,
       'address': address,
       'email': email,
+      'phone' : phone,
       'role': role,
     };
   }
