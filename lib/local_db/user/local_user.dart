@@ -1,6 +1,6 @@
 import 'package:get_storage/get_storage.dart';
 
-import '../../signup/user_modal.dart';
+import '../../models/user_modal.dart';
 
   final box = GetStorage();
 

@@ -23,7 +23,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hktn/local_db/user/local_user.dart';
-import '../signup/user_modal.dart';
+import '../models/user_modal.dart';
 
 class FirebaseAuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;

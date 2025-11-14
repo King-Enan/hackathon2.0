@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hktn/local_db/user/local_user.dart';
-import '../signup/user_modal.dart';
+import '../models/user_modal.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -12,6 +12,7 @@ class AuthService {
     required String lastName,
     required String address,
     required String email,
+    required String phone,
     required String password,
     required String role, // 'farmer' or 'buyer'
   }) async {
@@ -34,6 +35,7 @@ class AuthService {
         lastName: lastName,
         address: address,
         email: email,
+        phone: phone,
         role: role,
       );
 

@@ -11,9 +11,7 @@ import '../widget/support_widget.dart';
 class TemplateGreen extends StatefulWidget {
   final Map<String, dynamic> data;
   int index;// Ensure data is a Map
-
   TemplateGreen({super.key, required this.data,required this.index});
-
   @override
   State<TemplateGreen> createState() => _TemplateGreenState();
 }
@@ -62,13 +60,13 @@ class _TemplateGreenState extends State<TemplateGreen> {
             ),
             AppWidget().heightSpace,
             Text(
-              widget.data['name']?.toString() ?? 'No Name',
+              widget.data['productName']?.toString() ?? 'No Name',
               style: AppWidget().semibold14Black,
               overflow: TextOverflow.ellipsis,
             ),
             AppWidget().heightBox(AppWidget().fixPadding * 0.3),
             Text(
-              widget.data['seller']?.toString() ?? 'No Description',
+              widget.data['sellerUid']?.toString() ?? 'No Description',
               style: AppWidget().medium12Primary,
               overflow: TextOverflow.ellipsis,
             ),

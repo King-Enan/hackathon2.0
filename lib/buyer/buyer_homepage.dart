@@ -11,9 +11,11 @@ import '../ banner/slider.dart';
 import '../ banner/template_green.dart';
 import '../ banner/template_user.dart';
 import '../db/db.dart';
+import '../models/product_model.dart';
+import '../services/product_service.dart';
 import '../text_field/txt_field1.dart';
 import '../widget/support_widget.dart';
-import 'bottum_nav.dart';
+import 'buyer_bottum_nav.dart';
 
 class BuyerHomepage extends StatefulWidget {
   const BuyerHomepage({super.key});
@@ -48,7 +50,7 @@ class _BuyerHomepageState extends State<BuyerHomepage> {
               AppWidget().heightSpace,
               Recommended(),
               AppWidget().heightSpace,
-              NewsForYou(),
+              ReliableFarmer(),
 
 
             ],
@@ -247,23 +249,45 @@ class _BuyerHomepageState extends State<BuyerHomepage> {
       child: Column(
         children: [
           headline("Latest Invesment", true, () {
-            Get.offAll(()=>BottomNav(index : 1));
+            Get.offAll(()=>BuyerBottomNav(index : 1));
           }),
           AppWidget().height5Space,
           SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.only(top: AppWidget().fixPadding),
             scrollDirection: Axis.horizontal,
-            child: Row(
-              children: List.generate(
-                productlist.items.length,
-                    (index) {
-                  final recommendedItemData = productlist.items[index];
-                   return TemplateGreen(data: recommendedItemData,index: index,);
-                  //return BuyerHomepage();
-                },
-              ),
-            ),
+            child: FutureBuilder<List<ProductModel>>(
+              future: ProductService().fetchProducts(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Center(child: Text("Error: ${snapshot.error}"));
+                }
+
+                final products = snapshot.data ?? [];
+
+                return Row(
+                  children: List.generate(
+                    products.length,
+                        (index) {
+                      final data = products[index];
+                      if(data==null)
+                        return Text("nai");
+                      else
+                        {
+                          print(data.runtimeType);
+                          print(data.productName);
+                          return TemplateGreen(data: data.toMap(), index: index);
+                        }
+                    },
+                  ),
+                );
+              },
+            )
+
           )
         ],
       ),
@@ -276,7 +300,7 @@ Widget Recommended() {
     child: Column(
       children: [
         headline("Nearby You", true, () {
-          Get.offAll(()=>BottomNav(index : 1));
+          Get.offAll(()=>BuyerBottomNav(index : 1));
         }),
         AppWidget().height5Space,
         SingleChildScrollView(
@@ -299,13 +323,13 @@ Widget Recommended() {
   );
 }
 
-Widget NewsForYou() {
+Widget ReliableFarmer() {
   return Padding(
     padding: const EdgeInsets.only(top: 4, left: 20.0, right: 20, bottom: 8),
     child: Column(
       children: [
         headline("Reliable Farmer", true, () {
-          Get.offAll(()=>BottomNav(index : 1));
+          Get.offAll(()=>BuyerBottomNav(index : 1));
         }),
         AppWidget().height5Space,
         SingleChildScrollView(
