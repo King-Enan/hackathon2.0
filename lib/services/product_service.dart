@@ -23,6 +23,9 @@ class ProductService {
         price: product.price,
         sellerUid: product.sellerUid,
         status: product.status,
+        views: product.views,
+        purchases: product.purchases,
+        trandingScore: product.trandingScore,
         stock: product.stock,
         createdAt: product.createdAt,
       );
@@ -45,6 +48,51 @@ class ProductService {
           .toList();
     } catch (e) {
       print('❌ Error fetching products: $e');
+      rethrow;
+    }
+  }
+
+  /// 🟡 Fetch products filtered by category
+  /// 🟡 Fetch products, filter by category if not 'All'
+  Future<List<ProductModel>> fetchProductsByCategory(String category) async {
+    try {
+      QuerySnapshot snapshot;
+
+      if (category.toLowerCase() == 'all') {
+        // Fetch all products
+        snapshot = await _productCollection.get();
+      } else {
+        // Fetch only products of the given category
+        snapshot = await _productCollection
+            .where('category', isEqualTo: category)
+            .get();
+      }
+
+      return snapshot.docs
+          .map((doc) => ProductModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print('❌ Error fetching products by category: $e');
+      rethrow;
+    }
+  }
+
+
+
+  /// 🟡 Fetch trending products
+  Future<List<ProductModel>> fetchTrendingProducts() async {
+    try {
+      final snapshot = await _productCollection
+          .orderBy('trendingScore', descending: true)   // 🔥 SORT BY TRENDING SCORE
+          .limit(20)                                    // optional
+          .get();
+
+      return snapshot.docs
+          .map((doc) =>
+          ProductModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print('❌ Error fetching trending products: $e');
       rethrow;
     }
   }
@@ -98,4 +146,42 @@ class ProductService {
       rethrow;
     }
   }
+
+  //incress views of product
+  Future<void> increaseViews(String productId) async {
+    final docRef = FirebaseFirestore.instance.collection('products').doc(productId);
+
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      final snapshot = await transaction.get(docRef);
+
+      int views = snapshot['views'] + 1;
+      double purchases = snapshot['purchases'];
+      double score = (views * 0.4) + (purchases * 0.6);
+
+      transaction.update(docRef, {
+        'views': views,
+        'trendingScore': score.toDouble(),
+      });
+    });
+  }
+
+  //incress purchases
+  Future<void> increasePurchase(String productId) async {
+    final docRef = FirebaseFirestore.instance.collection('products').doc(productId);
+
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      final snapshot = await transaction.get(docRef);
+
+     double purchases = snapshot['purchases'] + 1;
+      int views = snapshot['views'];
+      double score = (views * 0.4) + (purchases * 0.6);
+
+      transaction.update(docRef, {
+        'purchases': purchases,
+        'trendingScore': score.toDouble(),
+      });
+    });
+  }
+
+
 }

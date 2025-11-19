@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_common/get_reset.dart';
+import 'package:hktn/local_db/user/local_user.dart';
+import 'package:hktn/models/order_model.dart';
+import 'package:hktn/services/order_service.dart';
 
 class OrderDetails extends StatefulWidget {
   @override
@@ -87,60 +91,78 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
         controller: _tabController,
         children: [
           // Ongoing
-          _buildOrderList(OrderStatus.ongoing),
+          _buildOrderList("ongoing"),
           // Pending
-          _buildOrderList(OrderStatus.pending),
+          _buildOrderList("pending"),
           // Completed
-          _buildOrderList(OrderStatus.completed),
+          _buildOrderList("completed"),
         ],
       ),
     );
   }
 
-  Widget _buildOrderList(OrderStatus status) {
-    final filteredOrders = getOrdersByStatus(status);
+  Widget _buildOrderList(String status) {
+    //final filteredOrderss = OrderService().getOrdersByStatus(status);
 
-    if (filteredOrders.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.shopping_basket_outlined,
-                color: Colors.green,
-                size: 60,
-              ),
-              SizedBox(height: 16),
-              Text(
-                'No orders yet',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.black87,
+    return FutureBuilder(
+        //future: OrderService().getOrdersByBuyer(getLocalUser()!.email),
+        future: OrderService().getOrdersByStatus(status),
+        builder: (context,snapshot){
+          if(snapshot.connectionState == ConnectionState.waiting)
+            {
+              return Center(child: CircularProgressIndicator(),);
+            }
+          if(!snapshot.hasData || snapshot.data!.isEmpty){
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.shopping_basket_outlined,
+                      color: Colors.green,
+                      size: 60,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No orders yet',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Your orders will appear here once confirmed',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 8),
-              Text(
-                'Your orders will appear here once confirmed',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey[600]),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
+            );
+          }
 
-    return ListView.builder(
-      padding: EdgeInsets.all(16),
-      itemCount: filteredOrders.length,
-      itemBuilder: (context, index) {
-        final order = filteredOrders[index];
-        return _OrderCard(order: order);
-      },
+          final filteredOrders = snapshot.data!;
+print(filteredOrders.length);
+          return ListView.builder(
+            padding: EdgeInsets.all(16),
+            itemCount: filteredOrders.length,
+            itemBuilder: (context, index) {
+              final order = filteredOrders[index];
+              return OrderCard(order);
+            },
+          );
+
+
+        }
     );
+
+
+    //
+
   }
 }
 
@@ -314,4 +336,120 @@ class _OrderCard extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget OrderCard(OrderModel order)
+{
+  return Container(
+    margin: EdgeInsets.only(bottom: 14),
+    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(14),
+      boxShadow: [
+        BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 3)),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Top row: order id and status tag
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Order #${order.orderId}',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            _buildStatusTag(order.status),
+          ],
+        ),
+
+        SizedBox(height: 8),
+
+        // Middle row: items + emojis and total count
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                "${order.productName}e(" ")} (${order.quantity} item${order.quantity > 1 ? 's' : ''})",
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+            // Row(children: _itemIcons()),
+          ],
+        ),
+
+        SizedBox(height: 8),
+
+        // Bottom row: buyer/farmer label and right icon
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              order.sellerUid,
+              style: TextStyle(color: Colors.grey[600], fontSize: 13),
+            ),
+            _buildIcons(order.status),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+Color _getStatusColor(String status) {
+  switch (status) {
+    case "pending":
+      return Colors.orange;
+    case "ongoing":
+      return Colors.green;
+    case "completed":
+      return Colors.green.shade700;
+    default:
+      return Colors.grey;
+  }
+}
+
+String _getStatusText(String status) {
+  switch (status) {
+    case "pending":
+      return "Pending";
+    case "ongoing":
+      return "Ongoing";
+    case "completed":
+      return "Completed";
+    default :
+      return "Pending";
+  }
+}
+
+Widget _buildStatusTag(String status) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    decoration: BoxDecoration(
+      color: _getStatusColor(status),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Text(
+      _getStatusText(status),
+      style: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: 12,
+      ),
+    ),
+  );
+}
+
+Widget _buildIcons(String status) {
+  // For demo, use simple icons matching the type of order items, or simpler icons
+  if (status == OrderStatus.pending || status == OrderStatus.ongoing) {
+    // Delivery truck icon to right
+    return Icon(Icons.local_shipping, color: Colors.green);
+  }
+  if (status == OrderStatus.completed) {
+    return Icon(Icons.check_circle, color: Colors.green);
+  }
+  return SizedBox();
 }

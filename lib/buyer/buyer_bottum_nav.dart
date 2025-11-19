@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:hktn/buyer/all_veg.dart';
 import 'package:hktn/buyer/buyer_profile.dart';
 import 'package:hktn/buyer/buyer_homepage.dart';
+import 'package:hktn/buyer/my_cart.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/bx.dart';
 import 'package:iconify_flutter/icons/ep.dart';
 import 'package:iconify_flutter/icons/gg.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
@@ -33,6 +35,7 @@ class _BuyerBottomNavState extends State<BuyerBottomNav> {
   late List<Widget> pages;
   late BuyerHomepage buyerHomePage;
   late BuyerProfile buyerDashboard;
+  late MyCart myCart;
   late AllVeg allVeg;
   // late InvestmentPost investmentPost;
   // late News news;
@@ -48,11 +51,12 @@ class _BuyerBottomNavState extends State<BuyerBottomNav> {
 
     buyerHomePage = BuyerHomepage();
     buyerDashboard = BuyerProfile();
+    myCart = MyCart();
     allVeg = AllVeg();
     // investmentPost = InvestmentPost();
     // news = News();
     // others = Others();
-    pages = [buyerHomePage,allVeg,buyerDashboard];
+    pages = [buyerHomePage,allVeg,myCart,buyerDashboard];
     super.initState();
   }
   @override
@@ -74,10 +78,11 @@ class _BuyerBottomNavState extends State<BuyerBottomNav> {
         items:  [
           Iconify(Ep.home_filled,color: AppWidget().whiteColor,),
           Iconify(Gg.feed,color: AppWidget().whiteColor,),
+          Iconify(Bx.cart,color: AppWidget().whiteColor,size: 30,),
           //Icon(CupertinoIcons.news_solid,color: AppWidget().whiteColor,),
           //Icon(Icons.home_outlined, color: Colors.white),
           //Icon(Icons.feed_outlined, color: Colors.white),
-          Iconify(Pajamas.profile,color: AppWidget().whiteColor,size: 32,),
+          Iconify(Pajamas.profile,color: AppWidget().whiteColor,size: 30,),
           //Icon(Icons.newspaper_outlined, color: Colors.white),
           //Icon(Icons.person_outline, color: Colors.white),
         ],

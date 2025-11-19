@@ -1,66 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:hktn/%20banner/template_green.dart';
+import 'package:hktn/local_db/user/user_cart.dart';
+import 'package:hktn/widget/support_widget.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/fluent_mdl2.dart';
+import 'package:iconify_flutter/icons/ic.dart';
 
 class MyCart extends StatefulWidget {
-  final Map<String, dynamic> to_transection;
+  //final Map<String, dynamic> to_transection;
 
-  const MyCart({Key? key, required this.to_transection}) : super(key: key);
+  const MyCart({Key? key}) : super(key: key);
 
   @override
   _MyCartState createState() => _MyCartState();
 }
 
 class _MyCartState extends State<MyCart> {
-  late List<CartItem> cartItems;
+  List<Map<String, dynamic>> cartItems = CartStorage.getCart();
 
   @override
   @override
-  void initState() {
-    super.initState();
+  // void initState() {
+  //   super.initState();
+  //
+  //   cartItems = [];
+  //
+  //   // Since to_transection itself is a single map
+  //   cartItems.add(
+  //     CartItem(
+  //       id: widget.to_transection['id'] ?? UniqueKey().toString(),
+  //       name: widget.to_transection['name'] ?? '',
+  //       price: (widget.to_transection['price'] is num)
+  //           ? (widget.to_transection['price'] as num).toDouble()
+  //           : 0.0,
+  //       quantity: (widget.to_transection['ordering'] is int)
+  //           ? widget.to_transection['ordering'] as int
+  //           : 1,
+  //     ),
+  //   );
+  // }
 
-    cartItems = [];
 
-    // Since to_transection itself is a single map
-    cartItems.add(
-      CartItem(
-        id: widget.to_transection['id'] ?? UniqueKey().toString(),
-        name: widget.to_transection['name'] ?? '',
-        price: (widget.to_transection['price'] is num)
-            ? (widget.to_transection['price'] as num).toDouble()
-            : 0.0,
-        quantity: (widget.to_transection['ordering'] is int)
-            ? widget.to_transection['ordering'] as int
-            : 1,
-      ),
-    );
-  }
-
-
-  void _incrementQuantity(int index) {
-    setState(() {
-      cartItems[index].quantity++;
-    });
-  }
-
-  void _decrementQuantity(int index) {
-    setState(() {
-      if (cartItems[index].quantity > 1) {
-        cartItems[index].quantity--;
-      }
-    });
-  }
-
-  void _removeItem(int index) {
-    setState(() {
-      cartItems.removeAt(index);
-    });
-  }
-
+  // void _incrementQuantity(int index) {
+  //   setState(() {
+  //     cartItems[index].quantity++;
+  //   });
+  // }
+  //
+  // void _decrementQuantity(int index) {
+  //   setState(() {
+  //     if (cartItems[index].quantity > 1) {
+  //       cartItems[index].quantity--;
+  //     }
+  //   });
+  // }
+  //
   double get _totalPrice {
     double total = 0;
     for (var item in cartItems) {
-      total += item.price * item.quantity;
+      total += item['price'] * item['quantity'];
     }
     return total;
+  }
+
+  void _removeItem(String productId) {
+    CartStorage.deleteCartItem(productId);
+    setState(() {
+      cartItems=CartStorage.getCart();
+    });
   }
 
   @override
@@ -93,6 +100,8 @@ class _MyCartState extends State<MyCart> {
               separatorBuilder: (_, __) => SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final item = cartItems[index];
+                print("✅✅✅");
+                print(cartItems.length);
                 return _buildCartItem(item, index);
               },
             ),
@@ -105,7 +114,7 @@ class _MyCartState extends State<MyCart> {
     );
   }
 
-  Widget _buildCartItem(CartItem item, int index) {
+  Widget _buildCartItem(Map<String,dynamic> item, int index) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
@@ -118,7 +127,7 @@ class _MyCartState extends State<MyCart> {
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.network(
-              'https://i.pravatar.cc/150?img=12',
+              item['imageURL'],
               width: 64,
               height: 64,
               fit: BoxFit.cover,
@@ -133,12 +142,12 @@ class _MyCartState extends State<MyCart> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.name,
+                  item['productName'],
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 SizedBox(height: 4),
                 Text(
-                  "${item.price.toStringAsFixed(2)}",
+                  "Total : ${item['totalPrice'].toStringAsFixed(2)} Tk",
                   style: TextStyle(color: Colors.green, fontWeight: FontWeight.w700, fontSize: 14),
                 ),
                 SizedBox(height: 2),
@@ -153,36 +162,37 @@ class _MyCartState extends State<MyCart> {
           // Quantity controls
           Row(
             children: [
-              InkWell(
-                onTap: () => _incrementQuantity(index),
-                borderRadius: BorderRadius.circular(18),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                  padding: EdgeInsets.all(6),
-                  child: Icon(Icons.add, color: Colors.white, size: 20),
-                ),
-              ),
+              // InkWell(
+              //   onTap: () => _incrementQuantity(index),
+              //   borderRadius: BorderRadius.circular(18),
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //       color: Colors.green,
+              //       borderRadius: BorderRadius.circular(18),
+              //     ),
+              //     padding: EdgeInsets.all(6),
+              //     child: Icon(Icons.add, color: Colors.white, size: 20),
+              //   ),
+              // ),
+              Iconify(Ic.twotone_production_quantity_limits,size: 16,),
               SizedBox(width: 10),
               Text(
-                item.quantity.toString(),
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                "${item['quantity'].toString()} Kg",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
               SizedBox(width: 10),
-              InkWell(
-                onTap: () => _decrementQuantity(index),
-                borderRadius: BorderRadius.circular(18),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                  padding: EdgeInsets.all(6),
-                  child: Icon(Icons.remove, color: Colors.white, size: 20),
-                ),
-              ),
+              // InkWell(
+              //   onTap: () => _decrementQuantity(index),
+              //   borderRadius: BorderRadius.circular(18),
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //       color: Colors.green,
+              //       borderRadius: BorderRadius.circular(18),
+              //     ),
+              //     padding: EdgeInsets.all(6),
+              //     child: Icon(Icons.remove, color: Colors.white, size: 20),
+              //   ),
+              // ),
             ],
           ),
 
@@ -190,7 +200,7 @@ class _MyCartState extends State<MyCart> {
 
           // Delete button
           InkWell(
-            onTap: () => _removeItem(index),
+            onTap: () => _removeItem(item['productId']),
             child: Icon(Icons.delete_outline, color: Colors.red, size: 26),
           ),
         ],
@@ -198,7 +208,7 @@ class _MyCartState extends State<MyCart> {
     );
   }
 
-  Widget _placeholderImage(CartItem item) {
+  Widget _placeholderImage(Map<String,dynamic> item) {
     return Container(
       width: 64,
       height: 64,
@@ -263,21 +273,23 @@ class _MyCartState extends State<MyCart> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Total: ₹${_totalPrice.toStringAsFixed(0)}",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            "Total: ${formatCurrency(_totalPrice)} TK",
+            style: AppWidget.QuickSandBlackSizeBold(18),
           ),
+          SizedBox(width: 10),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              padding: EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              backgroundColor: AppWidget().primaryColor,
+              //padding: EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             ),
             onPressed: () {
               // TODO: Proceed to payment action
             },
             child: Text(
               "Proceed to Payment",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+              style: AppWidget.QuickSandBlackSizeBold(14),
+              textAlign: TextAlign.center,
             ),
           )
         ],
@@ -286,22 +298,3 @@ class _MyCartState extends State<MyCart> {
   }
 }
 
-class CartItem {
-  final String id;
-  final String name;
-  final double price;
-  //final String farm;
-  int quantity;
-  //final String imageUrl;
-  //final bool isFarmerImage;
-
-  CartItem({
-    required this.id,
-    required this.name,
-    required this.price,
-    //required this.farm,
-    required this.quantity,
-    //required this.imageUrl,
-    //required this.isFarmerImage,
-  });
-}

@@ -4,9 +4,12 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hktn/buyer/my_cart.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/ant_design.dart';
-
+import 'package:hktn/local_db/user/local_user.dart';
+import 'package:hktn/local_db/user/user_cart.dart';
+import 'package:hktn/models/cart_model.dart';
+import 'package:hktn/models/order_model.dart';
+import 'package:hktn/services/order_service.dart';
+import 'package:hktn/services/product_service.dart';
 import '../widget/support_widget.dart';
 
 
@@ -22,18 +25,23 @@ class VegDetails extends StatefulWidget {
 class _VegDetailsState extends State<VegDetails> {
 
   final box=GetStorage();
-
+  final TextEditingController quantityController = TextEditingController();
+  //List<CartItem>? to_transectionn;
+  List<Map<String, dynamic>> cart = CartStorage.getCart();
   Map<String,dynamic> to_transection=
   {
-    'id' : '',
-    "name": "",
+    'productId' : '',
+    "productName": "",
     "category": "",
-    "seller": "",
-    // "risk": "",
+    "imgURL" : "",
+    "buyerUid" : "",
+    "sellerUid": "",
+    "quantity": 0,
     "price": 0,
     // "roi": 0,
     "ordering" : 0,
-    "total" : 0,
+    "totalPrice" : 0,
+    "status": "pending",
     "Date" : "Jan 01,2025",
     "GateWay" : "",
   };
@@ -43,16 +51,22 @@ class _VegDetailsState extends State<VegDetails> {
     // TODO: implement initState
     super.initState();
     available = widget.data['stock'];
-    // to_transection['id']=widget.data['id'];
-    // to_transection['name']=widget.data['name'];
-    // to_transection['seller']=widget.data['seller'];
-    // to_transection['category']=widget.data['category'];
-    // to_transection['price']=widget.data['pricePerShare'];
+    fix_available = available;
+    quantityController.text = (fix_available-available).toString();
+    to_transection['productId']=widget.data['productId'];
+    to_transection['productName']=widget.data['productName'];
+    to_transection['imageURL']=widget.data['imageURL'];
+    to_transection['sellerUid']=widget.data['sellerUid'];
+    to_transection['category']=widget.data['category'];
+    to_transection['price']=widget.data['price'];
 
 
   }
   // final favinvestment=FavInvestment();
   // final reviews=Reviews();
+  late int fix_available ;
+  String temp_quantity="";
+  String last_value="0";
    int selectTitle = 0;
   int quantity = 0;
   // late int available;
@@ -75,7 +89,7 @@ class _VegDetailsState extends State<VegDetails> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            dummyImageWidget(),
+            ImageWidget(),
             AppWidget().heightSpace,
             BasicDetails(),
             AppWidget().heightSpace,
@@ -90,14 +104,14 @@ class _VegDetailsState extends State<VegDetails> {
     );
   }
 
-  // Widget ImageWidget() {
+  // Widget SpareImageWidget() {
   //   return Container(
   //     padding: EdgeInsets.only(top: 35, left: 15, right: 20, bottom: 15),
   //     width: AppWidget().screenWidth,
   //     height: AppWidget().screenHeight / 2.5,
   //     decoration: BoxDecoration(
   //       image: DecorationImage(
-  //         image: AssetImage(widget.data['image'].toString() ?? ""),
+  //         image: NetworkImage(widget.data['imageURL'].toString() ?? ""),
   //         fit: BoxFit.cover,
   //         opacity: .8,
   //       ),
@@ -208,14 +222,14 @@ class _VegDetailsState extends State<VegDetails> {
   //   );
   // }
 
-  Widget dummyImageWidget() {
+  Widget ImageWidget() {
     return Container(
       padding: EdgeInsets.only(top: 35, left: 15, right: 20, bottom: 15),
       width: AppWidget().screenWidth,
       height: AppWidget().screenHeight / 2.5,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/homebanner/seed.jpg"),
+          image: NetworkImage(widget.data['imageURL'].toString() ?? ""),
           fit: BoxFit.cover,
           opacity: .8,
         ),
@@ -352,6 +366,313 @@ class _VegDetailsState extends State<VegDetails> {
       ),
     );
   }
+
+  Widget PayementBox(){
+    void increaseQuantity() {
+      setState(() {
+        available--;
+        quantity++;
+      });
+      print(available);
+    }
+
+    void decreaseQuantity() {
+      if (quantity > 0) {
+        setState(() {
+          available++;
+          quantity--;
+        });
+      }
+      print(available);
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: 8, left: 20.0, right: 20, bottom: 0),
+      //padding: EdgeInsets.all(12),
+      child: Column(
+        children: [
+          //available units
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Available Units",style: AppWidget.QuickSandBlackSizeBold(22),),
+              Text(available.toString()+" KG",style: AppWidget.QuickSandGreenSizeBold(26),),
+            ],
+          ),
+          AppWidget().heightSpace,
+          AppWidget().heightSpace,
+          //total
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: AppWidget().primaryColor.withOpacity(.3),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppWidget().width5Space,
+                    Text("Total Cost",style: AppWidget.KumbhSansBlack87SizeBold(16),),
+                    Text(((fix_available-available)*widget.data['price']).toStringAsFixed(2)+" Tk",style: AppWidget.KumbhSansGreenSizeBold(16),),
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  height: 50, // Adjust height as needed
+                  child: VerticalDivider(
+                    color: Colors.grey, // Divider color
+                    thickness: 1, // Divider thickness
+                    width: 20, // Space around the divider
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    AppWidget().width5Space,
+                    Text("Total Weight",style: AppWidget.KumbhSansBlack87SizeBold(16),),
+                    Text((fix_available-available).toStringAsFixed(0)+"KG",style: AppWidget.KumbhSansGreenSizeBold(16),),
+
+                  ],
+                ),
+              ],
+            ),
+          ),
+          AppWidget().heightSpace,
+          AppWidget().heightSpace,
+          // (+,_)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              //AppWidget().heightBox(15),
+              Text("You are Ordering",style: AppWidget.QuickSandBlackSizeBold(18)),
+              Container(
+                width: 150,
+                height: 35,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8), // Outer border radius
+                  border: Border.all(
+                    color: AppWidget().blackColor.withOpacity(.8),
+                    width: 0.5,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: 40, // Match parent height
+                      width: 40, // Square button
+                      decoration: BoxDecoration(
+                        color: AppWidget().primaryColor.withOpacity(.2),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8), // Match outer radius
+                          bottomLeft: Radius.circular(8),
+                        ),
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.remove, size: 16),
+                        onPressed: (){
+                          decreaseQuantity();
+                          setState(() {
+                            quantityController.text = (fix_available-available).toString();
+                          });
+                        }
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical:6),
+                      child: Container(
+                        width: 50,
+                        child: TextField(
+                          onChanged: (text){
+
+                            if(temp_quantity.length>text.length)
+                              {
+                                if(text.isEmpty || text ==null)
+                                {
+                                  available = fix_available;
+                                }
+                                else {
+                                  print("minus");
+                                  int? lst = int.tryParse(text);
+                                  available = fix_available - lst!;
+                                  quantity = lst;
+                                }
+                              }
+                            else
+                              {
+                                print("plus");
+                                int? lst = int.tryParse(text);
+                                available = fix_available - lst!;
+                                quantity = lst;
+                              }
+                            temp_quantity = text;
+                            int value = int.tryParse(text) ?? 0;
+                            if(value>fix_available)
+                              quantityController.text= fix_available.toString();
+
+                            if(available>fix_available)
+                              available=fix_available;
+                            if(available<0)
+                              available = 0;
+                            setState(() {
+                              available = available;
+                              quantity =quantity;
+
+                            });
+                          },
+                          controller: quantityController,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          style: AppWidget.QuickSandBlackSize(20),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        color: AppWidget().primaryColor.withOpacity(.2),
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(8), // Match outer radius
+                          bottomRight: Radius.circular(8),
+                        ),
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.add, size: 16),
+                        onPressed: () {
+                          if (available> 0) {
+                            increaseQuantity();
+                            setState(() {
+                              quantityController.text = (fix_available-available).toString();
+                            });
+                          } else {
+                            //Get.snackbar("Stock Finished", "No more items available!");
+                          }
+                        },
+
+                      ),
+                    ),
+                  ],
+                ),
+              )
+
+            ],
+          ),
+          AppWidget().heightSpace,
+          AppWidget().heightSpace,
+          Terms_Agreement(),
+          AppWidget().heightSpace,
+          //order now
+          GestureDetector(
+            onTap: ()async{
+              await ProductService().increasePurchase(to_transection["productId"]);
+              to_transection["quantity"] = fix_available-available;
+              double totalPrice = to_transection["quantity"] * widget.data['price'];
+              to_transection["totalPrice"] = totalPrice;
+              to_transection["buyerUid"] = getLocalUser()!.email;
+              // print(to_transection["ordering"]);
+              // print(to_transection["total"]);
+              if(CartStorage.isExisting(to_transection['productId']))
+                {
+                  CartStorage.updateCart(to_transection['productId'], to_transection['quantity'],(to_transection['totalPrice'] ?? 0.0).toDouble(),);
+                }
+              else
+                {
+                  cart.add(to_transection);
+                  CartStorage.saveCartList(cart);
+                }
+              print(to_transection['buyerEmail']);
+              createOrder(to_transection);
+              agree ? Get.to(MyCart()) : null;
+
+            },
+            child: Container(
+              width: AppWidget().screenWidth,
+              padding: EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: agree?AppWidget().primaryColor:AppWidget().primaryColor.withOpacity(.5),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Order Now",style: AppWidget.QuickSandWhiteSizeBold(20),),
+                  AppWidget().widthSpace,
+                  Icon(CupertinoIcons.arrow_right,weight: 22,color: AppWidget().whiteColor,),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  void createOrder(Map<String,dynamic> order)async{
+    OrderModel orderModel = OrderModel.fromMap(order);
+    await OrderService().createOrder(orderModel);
+  }
+  
+
+  Widget Terms_Agreement(){
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent), // Removes default border of expand tile
+      child: ExpansionTile(
+        maintainState: true,
+        tilePadding: EdgeInsets.zero,
+        leading: Checkbox(
+          activeColor: AppWidget().primaryColor,
+          value: agree,
+          onChanged: (value) {
+            setState(() {
+              agree = value!;
+            });
+          },
+        ),
+        title: Row(
+          children: [
+            Expanded( // Prevents overflow issue
+              child: Row(
+                children: [
+                  Text("Agree with ", style: AppWidget().medium14Black),
+                  Text("Terms & Agreement", style: AppWidget().medium14Primary),
+                ],
+              ),
+            ),
+          ],
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Text(
+              "1. **Investment Risk**: All investments carry risks, including potential loss of principal.\n\n"
+                  "2. **No Guaranteed Returns**: Past performance does not indicate future results. Returns may vary.\n\n"
+                  "3. **Withdrawal Restrictions**: Some investments may have lock-in periods. Early withdrawal may incur penalties.\n\n"
+                  "4. **Regulatory Compliance**: Investors must comply with applicable financial regulations and tax laws.\n\n"
+                  "5. **Market Fluctuations**: Investment values may fluctuate due to market conditions, and returns are not fixed.\n\n"
+                  "6. **Due Diligence**: It is your responsibility to research and understand investment opportunities before committing funds.\n\n"
+                  "7. **Modification of Terms**: The company reserves the right to update investment policies and conditions at any time.",
+              style: AppWidget().medium14Black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  int calculateRemaining(int total_share,int remaining_share)
+  {
+    return total_share-remaining_share;
+  }
+
+
   //
   // Widget SegmentedControl(List<Widget> titels) {
   //   return Container(
@@ -422,227 +743,7 @@ class _VegDetailsState extends State<VegDetails> {
   //   );
   // }
   //
-  Widget PayementBox(){
-    void increaseQuantity() {
-      setState(() {
-        quantity++;
-      });
-      print(available);
-    }
 
-    void decreaseQuantity() {
-      if (quantity > 0) {
-        setState(() {
-          quantity--;
-        });
-      }
-      print(available);
-    }
-
-    return Container(
-      margin: const EdgeInsets.only(top: 8, left: 20.0, right: 20, bottom: 0),
-      //padding: EdgeInsets.all(12),
-      child: Column(
-        children: [
-          //available units
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Available Units",style: AppWidget.QuickSandBlackSizeBold(22),),
-              Text(available.toString()+" KG",style: AppWidget.QuickSandGreenSizeBold(26),),
-            ],
-          ),
-          AppWidget().heightSpace,
-          AppWidget().heightSpace,
-          //total
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: AppWidget().primaryColor.withOpacity(.3),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppWidget().width5Space,
-                    Text("Total Cost",style: AppWidget.KumbhSansBlack87SizeBold(16),),
-                    Text((quantity*widget.data['price']).toStringAsFixed(2)+" Tk",style: AppWidget.KumbhSansGreenSizeBold(16),),
-                  ],
-                ),
-                Container(
-                  padding: EdgeInsets.all(8),
-                  height: 50, // Adjust height as needed
-                  child: VerticalDivider(
-                    color: Colors.grey, // Divider color
-                    thickness: 1, // Divider thickness
-                    width: 20, // Space around the divider
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    AppWidget().width5Space,
-                    Text("Total Weight",style: AppWidget.KumbhSansBlack87SizeBold(16),),
-                    Text(quantity.toStringAsFixed(0)+"KG",style: AppWidget.KumbhSansGreenSizeBold(16),),
-
-                  ],
-                ),
-              ],
-            ),
-          ),
-          AppWidget().heightSpace,
-          AppWidget().heightSpace,
-          // (+,_)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              //AppWidget().heightBox(15),
-              Text("You are Ordering",style: AppWidget.QuickSandBlackSizeBold(18)),
-              Container(
-                width: 150,
-                height: 35,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8), // Outer border radius
-                  border: Border.all(
-                    color: AppWidget().blackColor.withOpacity(.8),
-                    width: 0.5,
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      height: 40, // Match parent height
-                      width: 40, // Square button
-                      decoration: BoxDecoration(
-                        color: AppWidget().primaryColor.withOpacity(.2),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8), // Match outer radius
-                          bottomLeft: Radius.circular(8),
-                        ),
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.remove, size: 16),
-                        onPressed: decreaseQuantity,
-                      ),
-                    ),
-                    Text(
-                      "$quantity",
-                      style: AppWidget.QuickSandBlackSize(20),
-                    ),
-                    Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        color: AppWidget().primaryColor.withOpacity(.2),
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(8), // Match outer radius
-                          bottomRight: Radius.circular(8),
-                        ),
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.add, size: 16),
-                        onPressed: increaseQuantity,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-
-            ],
-          ),
-          AppWidget().heightSpace,
-          AppWidget().heightSpace,
-          Terms_Agreement(),
-          AppWidget().heightSpace,
-          //invest now
-          GestureDetector(
-            onTap: (){
-
-                // to_transection["quantity"] = quantity;
-                // //double totalPrice = quantity * widget.data['pricePerShare'];
-                // to_transection["total"] = (quantity * widget.data['price']);
-                // print(to_transection["ordering"]);
-                // print(to_transection["total"]);
-                // agree ? Get.to(MyCart(to_transection: to_transection)) : null;
-
-            },
-            child: Container(
-              width: AppWidget().screenWidth,
-              padding: EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                color: agree?AppWidget().primaryColor:AppWidget().primaryColor.withOpacity(.5),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Order Now",style: AppWidget.QuickSandWhiteSizeBold(20),),
-                  AppWidget().widthSpace,
-                  Icon(CupertinoIcons.arrow_right,weight: 22,color: AppWidget().whiteColor,),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget Terms_Agreement(){
-    return Theme(
-      data: Theme.of(context).copyWith(dividerColor: Colors.transparent), // Removes default border of expand tile
-      child: ExpansionTile(
-        maintainState: true,
-        tilePadding: EdgeInsets.zero,
-        leading: Checkbox(
-          activeColor: AppWidget().primaryColor,
-          value: agree,
-          onChanged: (value) {
-            setState(() {
-              agree = value!;
-            });
-          },
-        ),
-        title: Row(
-          children: [
-            Expanded( // Prevents overflow issue
-              child: Row(
-                children: [
-                  Text("Agree with ", style: AppWidget().medium14Black),
-                  Text("Terms & Agreement", style: AppWidget().medium14Primary),
-                ],
-              ),
-            ),
-          ],
-        ),
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Text(
-              "1. **Investment Risk**: All investments carry risks, including potential loss of principal.\n\n"
-                  "2. **No Guaranteed Returns**: Past performance does not indicate future results. Returns may vary.\n\n"
-                  "3. **Withdrawal Restrictions**: Some investments may have lock-in periods. Early withdrawal may incur penalties.\n\n"
-                  "4. **Regulatory Compliance**: Investors must comply with applicable financial regulations and tax laws.\n\n"
-                  "5. **Market Fluctuations**: Investment values may fluctuate due to market conditions, and returns are not fixed.\n\n"
-                  "6. **Due Diligence**: It is your responsibility to research and understand investment opportunities before committing funds.\n\n"
-                  "7. **Modification of Terms**: The company reserves the right to update investment policies and conditions at any time.",
-              style: AppWidget().medium14Black,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  int calculateRemaining(int total_share,int remaining_share)
-  {
-    return total_share-remaining_share;
-  }
   //
   //
   // Widget Details(){

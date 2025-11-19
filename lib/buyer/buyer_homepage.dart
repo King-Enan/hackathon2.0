@@ -48,7 +48,7 @@ class _BuyerHomepageState extends State<BuyerHomepage> {
               AppWidget().heightSpace,
               LatestInvestment(),
               AppWidget().heightSpace,
-              Recommended(),
+              //Recommended(),
               AppWidget().heightSpace,
               ReliableFarmer(),
 
@@ -257,7 +257,7 @@ class _BuyerHomepageState extends State<BuyerHomepage> {
             padding: EdgeInsets.only(top: AppWidget().fixPadding),
             scrollDirection: Axis.horizontal,
             child: FutureBuilder<List<ProductModel>>(
-              future: ProductService().fetchProducts(),
+              future: ProductService().fetchTrendingProducts(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());

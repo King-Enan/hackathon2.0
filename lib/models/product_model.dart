@@ -10,6 +10,9 @@ class ProductModel {
   final double price;
   final String sellerUid;
   final String status;
+  final int views;
+  final double purchases;
+  final double trandingScore;
   final int stock;
   final Timestamp createdAt;
 
@@ -23,6 +26,9 @@ class ProductModel {
     required this.price,
     required this.sellerUid,
     required this.status,
+    required this.views,
+    required this.purchases,
+    required this.trandingScore,
     required this.stock,
     required this.createdAt,
   });
@@ -38,6 +44,9 @@ class ProductModel {
       'price': price,
       'sellerUid': sellerUid,
       'status': status,
+      'views' : views,
+      'purchases' : purchases,
+      'trandingScore' : trandingScore,
       'stock': stock,
       'createdAt': createdAt,
     };
@@ -54,6 +63,9 @@ class ProductModel {
       price: (map['price'] ?? 0).toDouble(),
       sellerUid: map['sellerUid'] ?? '',
       status: map['status'] ?? '',
+      views: map['views'] ?? '',
+      purchases: map['purchases'] ?? '',
+      trandingScore: map['trandingScore']??'',
       stock: (map['stock'] ?? 0).toInt(),
       createdAt: map['createdAt'] ?? Timestamp.now(),
     );

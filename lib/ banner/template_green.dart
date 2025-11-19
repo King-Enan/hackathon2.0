@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hktn/buyer/chk.dart';
+import 'package:hktn/services/product_service.dart';
 
 
 import '../buyer/veg_details.dart';
@@ -21,7 +22,8 @@ class _TemplateGreenState extends State<TemplateGreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async{
+        await ProductService().increaseViews(widget.data["productId"]);
         print(widget.data);
         print("bla");
         //Get.to(chk());
@@ -67,14 +69,22 @@ class _TemplateGreenState extends State<TemplateGreen> {
             AppWidget().heightBox(AppWidget().fixPadding * 0.3),
             Text(
               widget.data['sellerUid']?.toString() ?? 'No Description',
-              style: AppWidget().medium12Primary,
+              style: AppWidget().medium12Grey,
               overflow: TextOverflow.ellipsis,
             ),
             AppWidget().heightBox(AppWidget().fixPadding * 0.3),
-            Text(
-              widget.data['location']?.toString() ?? 'No Description',
-              style: AppWidget().medium12Grey,
-              overflow: TextOverflow.ellipsis,
+            Row(
+              children: [
+                Text("Tk per Kg : ",style: AppWidget().medium12Primary),
+                AppWidget().widthBox(2),
+                Text(
+                  formatCurrency(widget.data['price']),
+                  style: AppWidget().medium12Grey,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(" tk",style: AppWidget().medium12Primary),
+
+              ],
             ),
             AppWidget().heightBox(AppWidget().fixPadding * 0.3),
             // Row(
@@ -119,7 +129,7 @@ Widget imageWidget(Map<String, dynamic> itemData
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10.0),
       image: DecorationImage(
-        image: AssetImage(itemData['image']?.toString() ?? ''),
+        image: NetworkImage(itemData['imageURL']?.toString() ?? ''),
         fit: BoxFit.cover,
       ),
     ),
@@ -131,25 +141,25 @@ Widget imageWidget(Map<String, dynamic> itemData
           height: 20.0,
           width: 45,
           decoration: BoxDecoration(
-            color: AppWidget().primaryColor.withOpacity(0.6),
+            color: AppWidget().whiteColor.withOpacity(0.6),
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: Row(
             children: [
               AppWidget().width5Space,
-              // Expanded(
-              //   child: Text(
-              //     roi.toString() ?? '0.0',
-              //     style: AppWidget.QuickSandWhiteSize(12),
-              //     overflow: TextOverflow.ellipsis,
-              //   ),
-              // ),
-              // AppWidget().widthBox(AppWidget().fixPadding * 0.3),
-              Icon(
-                Icons.percent_outlined,
-                color: AppWidget().yellowColor,
-                size: 14.0,
+              Expanded(
+                child: Text(
+                  itemData['category'].toString() ?? '0.0',
+                  style: AppWidget.QuickSandWhiteSize(12),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
+              // AppWidget().widthBox(AppWidget().fixPadding * 0.3),
+              // Icon(
+              //   Icons.percent_outlined,
+              //   color: AppWidget().yellowColor,
+              //   size: 14.0,
+              // ),
             ],
           ),
         ),
@@ -175,4 +185,15 @@ Widget imageWidget(Map<String, dynamic> itemData
       ],
     ),
   );
+}
+String formatCurrency(double amount) {
+  if (amount >= 1000000000) {
+    return "${(amount / 1000000000).toStringAsFixed(2)}B";
+  } else if (amount >= 1000000) {
+    return "${(amount / 1000000).toStringAsFixed(0)}M";
+  } else if (amount >= 1000) {
+    return "${(amount / 1000).toStringAsFixed(2)}K";
+  } else {
+    return "${amount.toStringAsFixed(2)}";
+  }
 }
