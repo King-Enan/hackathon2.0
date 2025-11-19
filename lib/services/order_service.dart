@@ -40,7 +40,7 @@ class OrderService {
   Future<List<OrderModel>> getOrdersBySeller(String sellerEmail) async {
     try {
       QuerySnapshot snap = await ordersRef
-          .where('sellerEmail', isEqualTo: sellerEmail)
+          .where('sellerUid', isEqualTo: sellerEmail)
           .get();
 
       return snap.docs
@@ -85,6 +85,23 @@ class OrderService {
     } catch (e) {
       print("🔥 Error fetching seller orders: $e");
       return [];
+    }
+  }
+
+  //update order status
+  Future<bool> updateOrderStatus(String orderId,String status)async{
+    try{
+      await ordersRef.doc(orderId).update(
+        {
+          'status' : status,
+        }
+      );
+      print("✔ Status updated to $status");
+      return true;
+    }
+    catch(e){
+      print("🔥 Error updating order status: $e");
+      return false;
     }
   }
 

@@ -76,6 +76,7 @@ flutter:
     - assets/user/
     - assets/log_in/
     - assets/logo/
+    - assets/loading/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
