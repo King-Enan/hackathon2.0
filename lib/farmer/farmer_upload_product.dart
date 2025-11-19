@@ -257,6 +257,9 @@ class _FarmerUploadProductState extends State<FarmerUploadProduct> {
                                   price: double.parse(priceController.text.trim()),
                                   sellerUid: userData!.email,
                                   status: 'available',
+                                  views: 0,
+                                  purchases: 0,
+                                  trandingScore: 0,
                                   stock: int.tryParse(quantityController.text.trim()) ?? 0,
                                   createdAt: Timestamp.now(),
                                 );

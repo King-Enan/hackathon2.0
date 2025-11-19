@@ -4,6 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hktn/buyer/order_details.dart';
 import 'package:hktn/local_db/user/local_user.dart';
+import 'package:hktn/local_db/user/user_cart.dart';
 import 'package:hktn/sign_in.dart';
 import 'package:hktn/widget/support_widget.dart';
 
@@ -329,6 +330,7 @@ class _BuyerProfileState extends State<BuyerProfile> {
   void _onLogoutPressed(BuildContext context) async {
     try {
       await FirebaseLogoutService.logoutUser();
+      CartStorage.clearCart();
 
       Get.to(SignIN());
       print("✅✅✅");

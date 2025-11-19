@@ -54,10 +54,9 @@ class ProductList {
 
   List<String> categories = [
     "All",
-    "Vegetables",
-    "Fruits",
-    "Leafy Greens",
-    "Root Crops",
-    "Organic Produce",
+    "Vegetable",
+    "Fruit",
+    "Meat",
+    "Spinach",
   ];
 }

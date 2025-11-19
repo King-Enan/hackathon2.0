@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:hktn/farmer/farmer_notification.dart';
 import 'package:hktn/widget/support_widget.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/ant_design.dart';
+import 'package:iconify_flutter/icons/bx.dart';
+import 'package:iconify_flutter/icons/zmdi.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({Key? key}) : super(key: key);
@@ -169,6 +176,13 @@ class FarmerDashboard extends StatelessWidget {
                     radius: 22,
                     backgroundColor: Colors.green.shade300,
                     backgroundImage: const NetworkImage('https://i.pravatar.cc/150?img=12'),
+                  ),
+                  AppWidget().width5Space,
+                  IconButton(
+                      onPressed: (){
+                        Get.to(FarmerNotification());
+                      },
+                      icon: Iconify(Zmdi.notifications_active,color: AppWidget().primaryColor,size: 24,),
                   ),
                 ],
               ),

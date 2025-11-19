@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hktn/db/db.dart';
+import 'package:hktn/models/product_model.dart';
+import 'package:hktn/services/product_service.dart';
 
 import '../ banner/template_green.dart';
 import '../component.dart';
@@ -35,7 +37,7 @@ class _AllVegState extends State<AllVeg> {
           children: [
             Category(),
             AppWidget().heightBox(10),
-            allDummyProject(),
+            allProject(),
           ],
         ),
       ),
@@ -98,59 +100,59 @@ class _AllVegState extends State<AllVeg> {
   // }
 
 
-  // Widget allProject() {
-  //   return FutureBuilder(
-  //       future: getAllProjects(),
-  //       builder: (context, AsyncSnapshot<List<Project>> dataSnapShot) {
-  //         if (dataSnapShot.connectionState == ConnectionState.waiting) {
-  //           return const Center(
-  //             child: CircularProgressIndicator(),
-  //           );
-  //         }
-  //         if (dataSnapShot.data == null) {
-  //           return const Center(
-  //             child: Text(
-  //               "Empty. No data found!",
-  //             ),
-  //           );
-  //         }
-  //         if (dataSnapShot.data!.isNotEmpty) {
-  //           return Expanded(
-  //             child: GridView.builder(
-  //               shrinkWrap: true, // Ensures it takes only required space
-  //               physics: BouncingScrollPhysics(), // Prevents scrolling inside GridView
-  //               padding: EdgeInsets.symmetric(horizontal: 0, vertical: 4),
-  //               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //                   crossAxisCount: 2, // Two items per row
-  //                   crossAxisSpacing: 2.0, // Space between columns
-  //                   mainAxisSpacing: 2.0, // Space between rows
-  //                   childAspectRatio:
-  //                   AppWidget().screenHeight * .00108 // Adjusts item height
-  //               ),
-  //               itemCount: dataSnapShot.data!.length,
-  //               itemBuilder: (context, index) {
-  //                 final eachProject = dataSnapShot.data![index];
-  //                 Map<String, dynamic> eachProjectMap = eachProject.toJson();
-  //                 return TemplateGreen(data: eachProjectMap, index: 1);
-  //               },
-  //             ),
-  //
-  //             // ListView.builder(
-  //             //   itemCount: dataSnapShot.data!.length,
-  //             //   itemBuilder: (context, index) {
-  //             //     Project eachProject = dataSnapShot.data![index];
-  //             //     Map<String, dynamic> eachProjectMap = eachProject.toJson();
-  //             //     return TemplateGreen(data: eachProjectMap, index: 1);
-  //             //   },
-  //             // ),
-  //           );
-  //         } else {
-  //           return const Center(
-  //             child: Text("Empty. No data found!"),
-  //           );
-  //         }
-  //       });
-  // }
+  Widget allProject() {
+    return FutureBuilder(
+        future: ProductService().fetchProductsByCategory(selectedCategory),
+        builder: (context, AsyncSnapshot<List<ProductModel>> dataSnapShot) {
+          if (dataSnapShot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (dataSnapShot.data == null) {
+            return const Center(
+              child: Text(
+                "Empty. No product found!",
+              ),
+            );
+          }
+          if (dataSnapShot.data!.isNotEmpty) {
+            return Expanded(
+              child: GridView.builder(
+                shrinkWrap: true, // Ensures it takes only required space
+                physics: BouncingScrollPhysics(), // Prevents scrolling inside GridView
+                padding: EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Two items per row
+                    crossAxisSpacing: 2.0, // Space between columns
+                    mainAxisSpacing: 2.0, // Space between rows
+                    childAspectRatio:
+                    AppWidget().screenHeight * .00108 // Adjusts item height
+                ),
+                itemCount: dataSnapShot.data!.length,
+                itemBuilder: (context, index) {
+                  final eachProduct = dataSnapShot.data![index];
+                  Map<String, dynamic> eachProductMap = eachProduct.toMap();
+                  return TemplateGreen(data: eachProductMap, index: 1);
+                },
+              ),
+
+              // ListView.builder(
+              //   itemCount: dataSnapShot.data!.length,
+              //   itemBuilder: (context, index) {
+              //     Project eachProject = dataSnapShot.data![index];
+              //     Map<String, dynamic> eachProjectMap = eachProject.toJson();
+              //     return TemplateGreen(data: eachProjectMap, index: 1);
+              //   },
+              // ),
+            );
+          } else {
+            return const Center(
+              child: Text("Empty. No data found!"),
+            );
+          }
+        });
+  }
 
   Widget allDummyProject() {
     return Expanded(
