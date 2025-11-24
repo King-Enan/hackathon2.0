@@ -8,12 +8,13 @@ import 'package:hktn/widget/support_widget.dart';
 class TemplateFarmerProduct extends StatefulWidget {
   //final Map<String, dynamic> product;
   final ProductModel product;
+  final VoidCallback onUpdate;
   //final List<ProductModel> product;
   int index;
   //final VoidCallback onDelete;
   //final Future<void> Function() onDelete;
 
-  TemplateFarmerProduct({super.key,required this.product,required this.index,
+  TemplateFarmerProduct({super.key,required this.product,required this.index,required this.onUpdate
     //required this.onDelete
    });
   @override
@@ -129,8 +130,9 @@ class _TemplateFarmerProductState extends State<TemplateFarmerProduct> {
                   color: Colors.orange,
                   size: 22,
                 ),
-                onPressed: () {
-                  Get.to(FarmerUpdateProduct(product: widget.product, index: widget.index));
+                onPressed: () async{
+                  await Get.to(FarmerUpdateProduct(product: widget.product, index: widget.index));
+                  widget.onUpdate();
                 },
               ),
               const SizedBox(height: 10),
@@ -166,6 +168,7 @@ class _TemplateFarmerProductState extends State<TemplateFarmerProduct> {
                     Get.snackbar('Deleted', 'Product deleted successfully');
                     //await widget.onDelete();
                   }
+                  widget.onUpdate();
                 },
               ),
             ],

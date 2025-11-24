@@ -5,20 +5,32 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hktn/%20banner/template_farmer_product.dart';
 import 'package:hktn/farmer/farmer_upload_product.dart';
+import 'package:hktn/loading_animation.dart';
 import 'package:hktn/local_db/user/local_user.dart';
+import 'package:lottie/lottie.dart';
 
 import '../models/product_model.dart';
 import '../services/product_service.dart';
 
 class FarmerProducts extends StatefulWidget {
   FarmerProducts({Key? key}) : super(key: key);
-
   @override
   State<FarmerProducts> createState() => _FarmerProductsState();
 }
 
 class _FarmerProductsState extends State<FarmerProducts> {
   // late final products;
+  late Future<List<ProductModel>> products;
+  void initState() {
+    products = ProductService().getProductsByFarmer(getLocalUser()!.email.toString());
+    super.initState();
+  }
+
+  void reload(){
+    setState(() {
+      products = ProductService().getProductsByFarmer(getLocalUser()!.email.toString());
+    });
+  }
 
   final userData = getLocalUser();
 
@@ -88,10 +100,12 @@ class _FarmerProductsState extends State<FarmerProducts> {
             // Product cards list
             Expanded(
               child: FutureBuilder<List<ProductModel>>(
-                future: ProductService().getProductsByFarmer(userData!.email), // fetch by farmer email
+                future: products, // fetch by farmer email
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(
+                        child: LoadingAnimation(),
+                    );
                   }
 
                   if (snapshot.hasError) {
@@ -116,7 +130,7 @@ class _FarmerProductsState extends State<FarmerProducts> {
                     separatorBuilder: (context, _) => const SizedBox(height: 14),
                     itemBuilder: (context, index) {
                       final product = products[index];
-                      return TemplateFarmerProduct(product: product, index: index,
+                      return TemplateFarmerProduct(product: product, index: index,onUpdate: reload,
                       //   onDelete: () async {
                       //   await _loadProducts(); // call async function safely
                       // },
@@ -181,8 +195,10 @@ class _FarmerProductsState extends State<FarmerProducts> {
                     alignment: Alignment.bottomRight,
                     children: [
                       FloatingActionButton(
-                        onPressed: () {
-                          Get.to(FarmerUploadProduct());
+                        onPressed: () async{
+                          await Get.to(FarmerUploadProduct());
+                          setState(() {
+                          });
                         },
                         backgroundColor: Colors.green,
                         child: const Icon(Icons.add),

@@ -157,7 +157,6 @@ class ProductService {
       int views = snapshot['views'] + 1;
       double purchases = snapshot['purchases'];
       double score = (views * 0.4) + (purchases * 0.6);
-
       transaction.update(docRef, {
         'views': views,
         'trendingScore': score.toDouble(),

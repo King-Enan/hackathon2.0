@@ -44,21 +44,6 @@ class _TemplateGreenState extends State<TemplateGreen> {
           children: [
             imageWidget(
                 widget.data
-                //     () {
-                //   if(widget.data['isFavorite']){
-                //     favinvestment.removeInvestmentById(widget.data['id']);
-                //   }
-                //   else {
-                //     favinvestment.addInvestment(widget.data);
-                //   }
-                //   print(favinvestment.favoriteInvestments.length);
-                //   setState(() {
-                //     if (widget.data.containsKey('isFavorite') && widget.data['isFavorite'] is bool) {
-                //       widget.data['isFavorite'] = !(widget.data['isFavorite'] as bool);
-                //     }
-                //   });
-                // },
-                // widget.data['roi']
             ),
             AppWidget().heightSpace,
             Text(

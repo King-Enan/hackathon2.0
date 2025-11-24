@@ -60,8 +60,8 @@ class OrderModel {
 
     return OrderModel(
       orderId: doc.id,
-      buyerUid: data['buyerEmail'] ?? '',
-      sellerUid: data['sellerEmail'] ?? '',
+      buyerUid: data['buyerUid'] ?? '',
+      sellerUid: data['sellerUid'] ?? '',
       productId: data['productId'] ?? '',
       productName: data['productName'] ?? '',
       quantity: data['quantity'] ?? 0,
